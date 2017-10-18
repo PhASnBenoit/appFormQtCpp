@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     ../biblis/ci2c.cpp \
     ../biblis/cspi.cpp \
     ccapteurtemphumI2c.cpp \
-    ccapteurtempspi.cpp
+    ccapteurtempspi.cpp \
+    cbouton.cpp
 
 HEADERS  += \
     cled.h \
@@ -29,7 +30,8 @@ HEADERS  += \
     ../biblis/ci2c.h \
     ../biblis/cspi.h \
     ccapteurtemphumi2c.h \
-    ccapteurtempspi.h
+    ccapteurtempspi.h \
+    cbouton.h
 
 FORMS    += \
     cihmappformqtcpp.ui

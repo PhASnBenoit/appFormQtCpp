@@ -1,7 +1,6 @@
 #ifndef CCAPTEURTEMPHUMI2C_H
 #define CCAPTEURTEMPHUMI2C_H
 
-#include <QObject>
 #include <QThread>
 
 class CCapteurTempHumI2c : public QThread

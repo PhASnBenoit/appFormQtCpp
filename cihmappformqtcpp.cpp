@@ -6,23 +6,33 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     ui(new Ui::CIhmAppFormQtCpp)
 {
     ui->setupUi(this);
+    // BDD
     bdd = QSqlDatabase::addDatabase("QMYSQL");
     if (!bdd.isValid()) {
         emit erreur("Driver BDD non reconnu !");
     } else {
         QMessageBox::warning(this, "BDD !", "Driver BDD OK");
     } // else
+
+    // LED
+    led = new CLed(this, 27);  // GPIO4
+
+    // lance thread CBouton
+
 }
 
 CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
 {
+    delete led;
+    if (shm) delete shm;
     delete ui;
 }
 
 void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 {
+   bool ok;
    int etat;
-   if (ui->pbStartStop->text() == "Start acquisition") etat = 1; else etat = 0;
+   if (ui->pbStartStop->text() == "Start acquisition") etat = 1; else etat = 2;
 
    switch(etat) {
    case 1: // start acquisition
@@ -31,9 +41,9 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        bdd.setDatabaseName(ui->leNomBdd->text());
        bdd.setUserName(ui->leUserSgbd->text());
        bdd.setPassword(ui->lePassSgbd->text());
-       bool ok = bdd.open();
+       ok = bdd.open();
        if (!ok) {
-           erreur("Ouverture de la BDD impossible !");
+           emit erreur("Ouverture de la BDD impossible !");
            return;
        } // if ok
 
@@ -43,9 +53,10 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        shm = new QSharedMemory("./cihmappformqtcpp.h",this);
        ui->pbStartStop->setText("Stop acquisition");
        break;
-   case 0: // stop acquisition
+
+   default: // stop acquisition
+       delete shm;
        ui->pbStartStop->setText("Start acquisition");
-   default:
        break;
    } // sw
 }
@@ -53,4 +64,23 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 void CIhmAppFormQtCpp::on_Erreur(QString mess)
 {
     QMessageBox::warning(this, "Erreur !", mess);
+}
+
+void CIhmAppFormQtCpp::on_pbOnOffLed_clicked()
+{
+    int etat;
+    if (ui->pbOnOffLed->text() == "Allumer") etat = 1; else etat = 2;
+
+    switch(etat) {
+    case 1:
+        ui->laRouge->setVisible(true);
+        ui->laNoir->setVisible(false);
+        ui->pbOnOffLed->setText("Eteindre");
+        break;
+    default:
+        ui->laRouge->setVisible(false);
+        ui->laNoir->setVisible(true);
+        ui->pbOnOffLed->setText("Allumer");
+        break;
+    } // sw
 }
