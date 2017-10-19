@@ -20,18 +20,19 @@ SOURCES += main.cpp\
     ../biblis/cspi.cpp \
     ccapteurtemphumI2c.cpp \
     ccapteurtempspi.cpp \
-    cbouton.cpp
+    cbouton.cpp \
+    cperiphrs232.cpp
 
 HEADERS  += \
     cled.h \
-    cecran.h \
     cihmappformqtcpp.h \
     ../biblis/cgpio.h \
     ../biblis/ci2c.h \
     ../biblis/cspi.h \
     ccapteurtemphumi2c.h \
     ccapteurtempspi.h \
-    cbouton.h
+    cbouton.h \
+    cperiphrs232.h
 
 FORMS    += \
     cihmappformqtcpp.ui

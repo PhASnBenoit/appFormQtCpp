@@ -7,7 +7,7 @@ class CPeriphRs232 : public QThread
 {
     Q_OBJECT
 public:
-    explicit CPeriphRs232(QObject *parent = 0);
+    explicit CPeriphRs232(QObject *parent = 0, QString port = "/dev/USB0", int inter = 10000);
 
 signals:
 
