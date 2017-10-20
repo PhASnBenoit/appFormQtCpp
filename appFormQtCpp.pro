@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     ccapteurtemphumI2c.cpp \
     ccapteurtempspi.cpp \
     cbouton.cpp \
-    cperiphrs232.cpp
+    cperiphrs232.cpp \
+    csharedmemory.cpp
 
 HEADERS  += \
     cled.h \
@@ -32,7 +33,9 @@ HEADERS  += \
     ccapteurtemphumi2c.h \
     ccapteurtempspi.h \
     cbouton.h \
-    cperiphrs232.h
+    cperiphrs232.h \
+    global.h \
+    csharedmemory.h
 
 FORMS    += \
     cihmappformqtcpp.ui

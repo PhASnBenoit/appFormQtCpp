@@ -12,11 +12,13 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     bdd = QSqlDatabase::addDatabase("QMYSQL");
     if (!bdd.isValid()) {
         emit erreur("Driver BDD non reconnu !");
-    } else {
-        QMessageBox::warning(this, "BDD !", "Driver BDD OK");
-    } // else
+    }
 
-    // LED
+    // initialisation de la mémoire partagée
+    mShm = new CSharedMemory(this, 3*sizeof(float));
+    mShm->attacherOuCreer();
+
+    // intanciation de l'objet LED
     led = new CLed(this, GPIO27);
 
     // lance thread CBouton
@@ -26,14 +28,12 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     thI2c = NULL;
     tSpi = NULL;
 
-    interEcran = new QTimer(this);
     interServeur = new QTimer(this);
     interSgbd = new QTimer(this);
 }
 
 CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
 {
-    delete interEcran;
     delete interServeur;
     delete interSgbd;
 
@@ -42,7 +42,7 @@ CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
 
     if (thI2c) delete thI2c;
     if (tSpi) delete tSpi;
-    if (shm) delete shm;
+    delete mShm;
     delete ui;  // toujours en dernier
 }
 
@@ -54,7 +54,10 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 
    switch(etat) {
    case 1: // start acquisition
+       // réglages IHM de départ
        setIhm(false);
+       ui->pbStartStop->setText("Stop acquisition");
+
        // ouverture de la base de données
        bdd.setHostName(ui->leAdrSgbd->text());
        bdd.setDatabaseName(ui->leNomBdd->text());
@@ -68,9 +71,6 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 
        // connexion au serveur réseau
 
-       // initialisation de la mémoire partagée
-       shm = new QSharedMemory("./cihmappformqtcpp.h",this);
-       ui->pbStartStop->setText("Stop acquisition");
 
        // lance les thread capteurs
        thI2c = new CCapteurTempHumI2c(this);
@@ -79,13 +79,12 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        tSpi->start();
 
        // ouvrir le port série avec le terminal
-       periph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText());
+       periph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText(), ui->leInterPeriph->text().toInt()*1000);
        periph->start();
 
        // lance les timers d'acquisition
-       interEcran->start(ui->leInterEcran->text().toInt());
-       interServeur->start(ui->leInterServ->text().toInt());
-       interSgbd->start(ui->leInterBdd->text().toInt());
+       interServeur->start(ui->leInterServ->text().toInt()*1000);
+       interSgbd->start(ui->leInterBdd->text().toInt()*1000);
 
        // verrouille l'IHM
        setIhm(false);  // verrouille l'IHM quand acquisition
@@ -94,13 +93,14 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 
    default: // stop acquisition
 
-       interEcran->stop();
        interServeur->stop();
+       delete interServeur;
        interSgbd->stop();
+       delete interSgbd;
        delete periph;
        delete thI2c;
        delete tSpi;
-       delete shm;
+       delete mShm;
        ui->pbStartStop->setText("Start acquisition");
        setIhm(true);
        break;
@@ -110,6 +110,11 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 void CIhmAppFormQtCpp::on_Erreur(QString mess)
 {
     QMessageBox::warning(this, "Erreur !", mess);
+}
+
+void CIhmAppFormQtCpp::on_etatBouton(bool etat)
+{
+    ui->teTexte->append((etat?"Bouton relâché !":"Bouton appuyé !"));
 }
 
 void CIhmAppFormQtCpp::on_pbOnOffLed_clicked()
@@ -137,7 +142,7 @@ void CIhmAppFormQtCpp::setIhm(bool t)
 {
     ui->leInterBdd->setEnabled(t);
     ui->leInterCapt->setEnabled(t);
-    ui->leInterEcran->setEnabled(t);
+    ui->leInterPeriph->setEnabled(t);
     ui->leInterServ->setEnabled(t);
 
     ui->cbBits->setEnabled(t);
@@ -157,6 +162,4 @@ void CIhmAppFormQtCpp::setIhm(bool t)
     ui->leSeuilHumI2c->setEnabled(t);
     ui->leSeuilTempI2c->setEnabled(t);
     ui->leSeuilTempSpi->setEnabled(t);
-
-
 }

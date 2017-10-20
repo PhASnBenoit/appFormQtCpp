@@ -19,6 +19,7 @@ private:
     CGpio *gpio;
 
 signals:
+    void erreur(QString mess);
 
 public slots:
 };

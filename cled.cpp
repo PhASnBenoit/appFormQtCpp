@@ -12,12 +12,14 @@ CLed::~CLed()
 
 int CLed::switchOn()
 {
-    gpio->ecrire(SWITCH_ON);
-    return 1;
+    int res;
+    res = gpio->ecrire(SWITCH_ON);
+    return res;
 }
 
 int CLed::switchOff()
 {
-    gpio->ecrire(SWITCH_OFF);
-    return 1;
+    int res;
+    res = gpio->ecrire(SWITCH_OFF);
+    return res;
 }

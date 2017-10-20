@@ -13,11 +13,14 @@ public:
 
 private:
     CGpio *gpio;
+    void run();
+    bool mValMem;  // état mémoire
 
 signals:
+    void etatBouton(bool etat);
+    void erreur(QString mess);
 
 public slots:
-
 
 };
 

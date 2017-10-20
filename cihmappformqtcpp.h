@@ -11,6 +11,8 @@
 #include "cperiphrs232.h"
 #include "ccapteurtemphumi2c.h"
 #include "ccapteurtempspi.h"
+#include "csharedmemory.h"
+#include "global.h"
 
 #define GPIO22 22
 #define GPIO27 27
@@ -30,7 +32,7 @@ public:
 private slots:
     void on_pbStartStop_clicked();
     void on_Erreur(QString mess);
-
+    void on_etatBouton(bool etat);
     void on_pbOnOffLed_clicked();
 
 signals :
@@ -39,7 +41,7 @@ signals :
 private:
     Ui::CIhmAppFormQtCpp *ui;
     QSqlDatabase bdd;
-    QSharedMemory *shm;
+    CSharedMemory *mShm;
     CLed *led;
     CBouton *thread_bt;
     CPeriphRs232 *periph;
@@ -47,7 +49,6 @@ private:
     CCapteurTempSpi *tSpi;
     QTimer *interServeur;
     QTimer *interSgbd;
-    QTimer *interEcran;
 
     void setIhm(bool t);
 };

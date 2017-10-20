@@ -397,8 +397,8 @@
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>460</x>
-        <y>160</y>
+        <x>520</x>
+        <y>150</y>
         <width>16</width>
         <height>41</height>
        </rect>
@@ -436,21 +436,21 @@
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>74</x>
         <y>280</y>
-        <width>115</width>
+        <width>241</width>
         <height>39</height>
        </rect>
       </property>
       <property name="text">
-       <string>Ecran :</string>
+       <string>Périphérique :</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_9">
       <property name="geometry">
        <rect>
-        <x>460</x>
-        <y>230</y>
+        <x>520</x>
+        <y>220</y>
         <width>17</width>
         <height>39</height>
        </rect>
@@ -462,8 +462,8 @@
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
-        <x>460</x>
-        <y>290</y>
+        <x>520</x>
+        <y>280</y>
         <width>17</width>
         <height>39</height>
        </rect>
@@ -475,8 +475,8 @@
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>460</x>
-        <y>100</y>
+        <x>520</x>
+        <y>90</y>
         <width>109</width>
         <height>39</height>
        </rect>
@@ -490,7 +490,7 @@
        <rect>
         <x>330</x>
         <y>80</y>
-        <width>111</width>
+        <width>171</width>
         <height>257</height>
        </rect>
       </property>
@@ -526,7 +526,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="leInterEcran">
+        <widget class="QLineEdit" name="leInterPeriph">
          <property name="inputMask">
           <string>99; </string>
          </property>
