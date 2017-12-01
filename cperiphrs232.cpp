@@ -8,7 +8,8 @@ CPeriphRs232::CPeriphRs232(QObject *parent, QString port, int inter) :
     mShm = new QSharedMemory(KEY,this);
     mShm->attach();   // tentative de s'attacher
     if (!mShm->isAttached()) {   // si existe pas alors création
-      emit erreur("Erreur de création de la mémoire partagée.");
+        QString mess="CPeriphRs232::CPeriphRs232 Erreur de création de la mémoire partagée.";
+        emit sigErreur(mess);
       return;
     } // if isattached
 }
@@ -24,4 +25,9 @@ void CPeriphRs232::run()
     while(1) {
 
     } // wh
+}
+
+void CPeriphRs232::onErreur(QString mess)
+{
+    emit sigErreur(mess);
 }

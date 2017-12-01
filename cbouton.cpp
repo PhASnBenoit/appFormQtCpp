@@ -3,7 +3,8 @@
 CBouton::CBouton(QObject *parent, int noGpio) :
     QThread(parent)
 {
-    gpio = new CGpio(noGpio, OUT);
+    gpio = new CGpio(noGpio, IN);
+    connect(gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     mValMem = false;
 }
 
@@ -14,16 +15,20 @@ CBouton::~CBouton()
 
 void CBouton::run()
 {
-    int val;
-    bool etat;
+    int etat;
 
     while(1) {
-        val = gpio->lire();
-        etat = (val!=0?false:true);  // 1 au repos
+        etat = gpio->lire();
         if (etat != mValMem) {
             mValMem = etat;
-            emit etatBouton(mValMem);
+            emit sigEtatBouton(mValMem);
+            qDebug() << "etat bouton : " << mValMem;
         } // if
-        usleep(100000);
+        usleep(50000);
     } // wh
+}
+
+void CBouton::onErreur(QString mess)
+{
+    emit sigErreur(mess);
 }

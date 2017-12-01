@@ -20,7 +20,7 @@ private:
     float *mAdrBase;
 
 signals:
-    void erreur(QString mess);
+    void sigErreur(QString mess);
 
 public slots:
 

@@ -9,13 +9,10 @@
 #include "cled.h"
 #include "cbouton.h"
 #include "cperiphrs232.h"
-#include "ccapteurtemphumi2c.h"
-#include "ccapteurtempspi.h"
+#include "ccapteuri2csht20.h"
+#include "ccapteurspitc72.h"
 #include "csharedmemory.h"
 #include "global.h"
-
-#define GPIO22 22
-#define GPIO27 27
 
 namespace Ui {
 class CIhmAppFormQtCpp;
@@ -36,20 +33,19 @@ private slots:
     void on_pbOnOffLed_clicked();
 
 signals :
-    void erreur(QString mess);
+    void sigErreur(QString mess);
 
 private:
     Ui::CIhmAppFormQtCpp *ui;
     QSqlDatabase bdd;
     CSharedMemory *mShm;
     CLed *led;
-    CBouton *thread_bt;
-    CPeriphRs232 *periph;
-    CCapteurTempHumI2c *thI2c;
-    CCapteurTempSpi *tSpi;
+    CBouton *thBt;
+    CPeriphRs232 *thPeriph;
+    CCapteurI2cSht20 *thI2c;
+    CCapteurSpiTc72 *thSpi;
     QTimer *interServeur;
     QTimer *interSgbd;
-
     void setIhm(bool t);
 };
 

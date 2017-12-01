@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql serialport
+QT       += core gui sql serialport network sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,27 +15,27 @@ TEMPLATE = app
 SOURCES += main.cpp\
     cled.cpp \
     cihmappformqtcpp.cpp \
+    cbouton.cpp \
+    cperiphrs232.cpp \
+    csharedmemory.cpp \
     ../biblis/cgpio.cpp \
     ../biblis/ci2c.cpp \
     ../biblis/cspi.cpp \
-    ccapteurtemphumI2c.cpp \
-    ccapteurtempspi.cpp \
-    cbouton.cpp \
-    cperiphrs232.cpp \
-    csharedmemory.cpp
+    ccapteuri2csht20.cpp \
+    ccapteurspitc72.cpp
 
 HEADERS  += \
     cled.h \
     cihmappformqtcpp.h \
-    ../biblis/cgpio.h \
-    ../biblis/ci2c.h \
-    ../biblis/cspi.h \
-    ccapteurtemphumi2c.h \
-    ccapteurtempspi.h \
     cbouton.h \
     cperiphrs232.h \
     global.h \
-    csharedmemory.h
+    csharedmemory.h \
+    ../biblis/cgpio.h \
+    ../biblis/ci2c.h \
+    ../biblis/cspi.h \
+    ccapteuri2csht20.h \
+    ccapteurspitc72.h
 
 FORMS    += \
     cihmappformqtcpp.ui

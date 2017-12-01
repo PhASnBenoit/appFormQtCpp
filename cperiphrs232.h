@@ -19,9 +19,10 @@ private:
     void run();
 
 signals:
-    void erreur(QString mess);
+    void sigErreur(QString mess);
 
-public slots:
+private slots:
+    void onErreur(QString mess);
 
 };
 

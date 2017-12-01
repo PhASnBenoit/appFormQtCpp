@@ -21,7 +21,8 @@ int CSharedMemory::attacherOuCreer()
     if (!isAttached()) {   // si existe pas alors création
          res = create(mTaille);   // on réserve pour 3 mesures
          if (!res) {
-              emit erreur("Erreur de création de la mémoire partagée.");
+              QString mess="CSharedMemory::attacherOuCreer Erreur de création de la mémoire partagée.";
+              emit sigErreur(mess);
               return ERREUR;
          } // if res
     } // if isattached
@@ -34,7 +35,8 @@ int CSharedMemory::attacherSeulement()
 {
     attach();   // tentative de s'attacher
     if (!isAttached()) {   // si existe pas alors création
-      emit erreur("Erreur de création de la mémoire partagée.");
+        QString mess="CSharedMemory::attacherSeulement Erreur de création de la mémoire partagée.";
+      emit sigErreur(mess);
       return ERREUR;
     } // if isattached
     mAdrBase = (float *)data();
@@ -44,11 +46,13 @@ int CSharedMemory::attacherSeulement()
 int CSharedMemory::ecrire(int no, float mesure)
 {
     if ( (no<0) && (no>2) ) {
-        emit erreur("Indice de la mesure incorrecte.");
+        QString mess="CSharedMemory::ecrire ERREUR, indice de la mesure incorrecte.";
+        emit sigErreur(mess);
         return ERREUR;
     } // if no
     if (!isAttached()) {   // si existe pas alors création
-        emit erreur("Erreur mémoire partagée non attachée.");
+        QString mess="CSharedMemory::ecrire Erreur mémoire partagée non attachée.";
+        emit sigErreur(mess);
         return ERREUR;
     } // if isattached
     mAdrBase[no] = mesure;
@@ -59,11 +63,13 @@ int CSharedMemory::ecrire(int no, float mesure)
 float CSharedMemory::lire(int no)
 {
     if ( (no<0) && (no>2) ) {
-        emit erreur("Indice de la mesure incorrecte.");
+        QString mess="CSharedMemory::lire ERREUR, indice de la mesure incorrecte.";
+        emit sigErreur(mess);
         return ERREUR;
     } // if no
     if (!isAttached()) {   // si existe pas alors création
-      emit erreur("Erreur mémoire partagée non attachée.");
+        QString mess="CSharedMemory::lire Erreur mémoire partagée non attachée. ";
+      emit sigErreur(mess);
       return ERREUR;
     } // if isattached
     return mAdrBase[no];

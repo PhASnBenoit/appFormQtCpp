@@ -2,7 +2,7 @@
 #define CBOUTON_H
 
 #include <QThread>
-#include "/home/philippe/devQt/biblis/cgpio.h"
+#include "/home/pi/devQt/biblis/cgpio.h"
 
 class CBouton : public QThread
 {
@@ -14,13 +14,14 @@ public:
 private:
     CGpio *gpio;
     void run();
-    bool mValMem;  // état mémoire
+    int mValMem;  // état mémoire
 
 signals:
-    void etatBouton(bool etat);
-    void erreur(QString mess);
+    void sigEtatBouton(bool etat);
+    void sigErreur(QString mess);
 
-public slots:
+private slots:
+    void onErreur(QString mess);
 
 };
 
