@@ -19,6 +19,7 @@ CCapteur_Spi_TC72::CCapteur_Spi_TC72(QObject *parent, int ce, int noMes) :
 CCapteur_Spi_TC72::~CCapteur_Spi_TC72()
 {
     delete m_spi;
+    m_shm->detach();
     delete m_shm;
 }
 
@@ -49,8 +50,11 @@ quint8 CCapteur_Spi_TC72::getManufacturer()
 {
     quint8 adr = REG_ID;
     m_spi->ecrireNOctets(&adr,1); // demande lecture
-    msleep(100);
-    return getManufacturer();
+//    msleep(200);
+    char id;
+    m_spi->lireNOctets(&id,1);
+    qDebug() << "id=" << QString::number(id,16);
+    return (quint8)id;
 }
 
 void CCapteur_Spi_TC72::run()
@@ -59,6 +63,7 @@ void CCapteur_Spi_TC72::run()
     setMode(CONTINUOUS);
     while (1) {
         temp = getTemperature();
+        qDebug() << QString::number(temp);
         m_shm->ecrire(m_noMes, temp);
         msleep(1000); // attente TC72 maj temp
     } // wh

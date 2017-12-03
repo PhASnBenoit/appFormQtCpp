@@ -279,7 +279,7 @@
       <x>10</x>
       <y>340</y>
       <width>671</width>
-      <height>401</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -434,6 +434,19 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="pbId">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>10</y>
+      <width>91</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ID TC72</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -474,7 +487,7 @@
        <x>10</x>
        <y>0</y>
        <width>301</width>
-       <height>201</height>
+       <height>191</height>
       </rect>
      </property>
      <property name="title">
@@ -483,9 +496,9 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>190</x>
         <y>30</y>
-        <width>111</width>
+        <width>71</width>
         <height>136</height>
        </rect>
       </property>
@@ -537,7 +550,7 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>131</width>
+        <width>171</width>
         <height>141</height>
        </rect>
       </property>
@@ -575,7 +588,7 @@
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Ecran :</string>
+          <string>Périphérique RS232C :</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -629,7 +642,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>210</y>
+       <y>200</y>
        <width>301</width>
        <height>221</height>
       </rect>
@@ -816,9 +829,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>440</y>
+       <y>430</y>
        <width>301</width>
-       <height>91</height>
+       <height>111</height>
       </rect>
      </property>
      <property name="title">
@@ -890,7 +903,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>540</y>
+       <y>550</y>
        <width>301</width>
        <height>181</height>
       </rect>

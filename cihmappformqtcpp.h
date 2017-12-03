@@ -12,6 +12,7 @@
 #include "ccapteur_i2c_sht20.h"
 #include "ccapteur_spi_tc72.h"
 #include "csharedmemory.h"
+#include "cspiioctl.h"
 #include "global.h"
 
 namespace Ui {
@@ -31,6 +32,12 @@ private slots:
     void on_Erreur(QString mess);
     void on_etatBouton(bool etat);
     void on_pbOnOffLed_clicked();
+    void on_timerMes();
+    void on_timerSgbd();
+    void on_timerServeur();
+    void on_timerPeriph();
+
+    void on_pbId_clicked();
 
 signals :
     void sigErreur(QString mess);
@@ -41,12 +48,14 @@ private:
     CSharedMemory *m_shm;
     CLed *m_led;
     CBoutonPoussoir *m_thBt;
+    CSpiIoctl *m_tc72;
     CPeriphRs232 *m_thPeriph;
     CCapteur_I2c_SHT20 *m_thI2c;
     CCapteur_Spi_TC72 *m_thSpi;
     QTimer *m_interServeur;
     QTimer *m_interSgbd;
     QTimer *m_interMes;
+    QTimer *m_interPeriph;
     void setIhm(bool t);
 };
 

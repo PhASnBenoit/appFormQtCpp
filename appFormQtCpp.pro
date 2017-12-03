@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     ../biblis/cspi.cpp \
     ccapteur_i2c_sht20.cpp \
     ccapteur_spi_tc72.cpp \
-    cboutonpoussoir.cpp
+    cboutonpoussoir.cpp \
+    cspiioctl.cpp
 
 HEADERS  += \
     cled.h \
@@ -35,7 +36,8 @@ HEADERS  += \
     ../biblis/cspi.h \
     ccapteur_i2c_sht20.h \
     ccapteur_spi_tc72.h \
-    cboutonpoussoir.h
+    cboutonpoussoir.h \
+    cspiioctl.h
 
 FORMS    += \
     cihmappformqtcpp.ui
