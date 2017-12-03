@@ -4,8 +4,8 @@ CSharedMemory::CSharedMemory(QObject *parent, int size) :
     QSharedMemory(parent)
 {
     setKey(KEY);
-    mTaille = size;
-    mAdrBase = NULL;
+    m_taille = size;
+    m_adrBase = NULL;
 }
 
 CSharedMemory::~CSharedMemory()
@@ -19,7 +19,7 @@ int CSharedMemory::attacherOuCreer()
 
     attach();   // tentative de s'attacher
     if (!isAttached()) {   // si existe pas alors création
-         res = create(mTaille);   // on réserve pour 3 mesures
+         res = create(m_taille);   // on réserve la place
          if (!res) {
               QString mess="CSharedMemory::attacherOuCreer Erreur de création de la mémoire partagée.";
               emit sigErreur(mess);
@@ -27,19 +27,19 @@ int CSharedMemory::attacherOuCreer()
          } // if res
     } // if isattached
     attach();
-    mAdrBase = (float *)data();
+    m_adrBase = (float *)data();
     return 0;
 }
 
 int CSharedMemory::attacherSeulement()
 {
     attach();   // tentative de s'attacher
-    if (!isAttached()) {   // si existe pas alors création
+    if (!isAttached()) {   // si existe pas
         QString mess="CSharedMemory::attacherSeulement Erreur de création de la mémoire partagée.";
       emit sigErreur(mess);
       return ERREUR;
     } // if isattached
-    mAdrBase = (float *)data();
+    m_adrBase = (float *)data();
     return 0;
 }
 
@@ -50,14 +50,13 @@ int CSharedMemory::ecrire(int no, float mesure)
         emit sigErreur(mess);
         return ERREUR;
     } // if no
-    if (!isAttached()) {   // si existe pas alors création
+    if (!isAttached()) {   // si existe pas
         QString mess="CSharedMemory::ecrire Erreur mémoire partagée non attachée.";
         emit sigErreur(mess);
         return ERREUR;
     } // if isattached
-    mAdrBase[no] = mesure;
+    m_adrBase[no] = mesure;
     return 0;
-
 }
 
 float CSharedMemory::lire(int no)
@@ -72,5 +71,5 @@ float CSharedMemory::lire(int no)
       emit sigErreur(mess);
       return ERREUR;
     } // if isattached
-    return mAdrBase[no];
+    return m_adrBase[no];
 }

@@ -7,10 +7,10 @@
 #include <QTimer>
 #include <QSharedMemory>
 #include "cled.h"
-#include "cbouton.h"
+#include "cboutonpoussoir.h"
 #include "cperiphrs232.h"
-#include "ccapteuri2csht20.h"
-#include "ccapteurspitc72.h"
+#include "ccapteur_i2c_sht20.h"
+#include "ccapteur_spi_tc72.h"
 #include "csharedmemory.h"
 #include "global.h"
 
@@ -37,15 +37,16 @@ signals :
 
 private:
     Ui::CIhmAppFormQtCpp *ui;
-    QSqlDatabase bdd;
-    CSharedMemory *mShm;
-    CLed *led;
-    CBouton *thBt;
-    CPeriphRs232 *thPeriph;
-    CCapteurI2cSht20 *thI2c;
-    CCapteurSpiTc72 *thSpi;
-    QTimer *interServeur;
-    QTimer *interSgbd;
+    QSqlDatabase m_bdd;
+    CSharedMemory *m_shm;
+    CLed *m_led;
+    CBoutonPoussoir *m_thBt;
+    CPeriphRs232 *m_thPeriph;
+    CCapteur_I2c_SHT20 *m_thI2c;
+    CCapteur_Spi_TC72 *m_thSpi;
+    QTimer *m_interServeur;
+    QTimer *m_interSgbd;
+    QTimer *m_interMes;
     void setIhm(bool t);
 };
 

@@ -10,43 +10,43 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     setIhm(true);
 
     // BDD
-    bdd = QSqlDatabase::addDatabase("QMYSQL");
-    if (!bdd.isValid()) {
+    m_bdd = QSqlDatabase::addDatabase("QMYSQL");
+    if (!m_bdd.isValid()) {
         emit sigErreur("CIhmAppFormQtCpp::CIhmAppFormQtCpp Driver BDD non reconnu !");
-    }
+    } // if bdd
 
     // initialisation de la mémoire partagée
-    mShm = new CSharedMemory(this, NBMESURES*sizeof(float));
-    mShm->attacherOuCreer();
+    m_shm = new CSharedMemory(this, NBMESURES*sizeof(float));
+    m_shm->attacherOuCreer();
 
     // intanciation de l'objet LED
-    led = new CLed(this, GPIO_LED);
+    m_led = new CLed(this, GPIO_LED);
 
-    // lance thread CBouton
-    thBt = new CBouton(this, GPIO_BOUTON);
-    connect(thBt, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-    connect(thBt, SIGNAL(sigEtatBouton(bool)), this, SLOT(on_etatBouton(bool)));
-    thBt->start();
+    // lance thread CBoutonPoussoir
+    m_thBt = new CBoutonPoussoir(this, GPIO_BOUTONPOUSSOIR);
+    connect(m_thBt, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+    connect(m_thBt, SIGNAL(sigEtatBouton(bool)), this, SLOT(on_etatBouton(bool)));
+    m_thBt->start();
 
-    thI2c = NULL;
-    thSpi = NULL;
+    m_thI2c = NULL;
+    m_thSpi = NULL;
 
-    interServeur = new QTimer(this);
-    interSgbd = new QTimer(this);
+    m_interServeur = new QTimer(this);
+    m_interSgbd = new QTimer(this);
 }
 
 CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
 {
-    delete interServeur;
-    delete interSgbd;
+    delete m_interServeur;
+    delete m_interSgbd;
 
     // arrêter avant le thread
-    delete thBt;
-    delete led;
+    delete m_thBt;
+    delete m_led;
 
-    if (thI2c) delete thI2c;
-    if (thSpi) delete thSpi;
-    delete mShm;
+    if (m_thI2c) delete m_thI2c;
+    if (m_thSpi) delete m_thSpi;
+    delete m_shm;
     delete ui;  // toujours en dernier
 }
 
@@ -63,11 +63,11 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        ui->pbStartStop->setText("Stop acquisition");
 
        // ouverture de la base de données
-       bdd.setHostName(ui->leAdrSgbd->text());
-       bdd.setDatabaseName(ui->leNomBdd->text());
-       bdd.setUserName(ui->leUserSgbd->text());
-       bdd.setPassword(ui->lePassSgbd->text());
-       ok = bdd.open();
+       m_bdd.setHostName(ui->leAdrSgbd->text());
+       m_bdd.setDatabaseName(ui->leNomBdd->text());
+       m_bdd.setUserName(ui->leUserSgbd->text());
+       m_bdd.setPassword(ui->lePassSgbd->text());
+       ok = m_bdd.open();
        if (!ok) {
            emit sigErreur("CIhmAppFormQtCpp::on_pbStartStop_clicked Ouverture de la BDD impossible !");
            return;
@@ -77,21 +77,21 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 
 
        // lance les thread capteurs
-       thI2c = new CCapteurI2cSht20(this);
-       connect(thI2c, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-       thI2c->start();
-       thSpi = new CCapteurSpiTc72(this);
-       connect(thSpi, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-       thSpi->start();
+       m_thI2c = new CCapteur_I2c_SHT20(this);
+       connect(m_thI2c, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       m_thI2c->start();
+       m_thSpi = new CCapteur_Spi_TC72(this, 0, 0);
+       connect(m_thSpi, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       m_thSpi->start();
 
        // ouvrir le port série avec le terminal
-       thPeriph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText(), ui->leInterPeriph->text().toInt()*1000);
-       connect(thPeriph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-       thPeriph->start();
+       m_thPeriph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText(), ui->leInterPeriph->text().toInt()*1000);
+       connect(m_thPeriph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       m_thPeriph->start();
 
        // lance les timers d'acquisition
-       interServeur->start(ui->leInterServ->text().toInt()*1000);
-       interSgbd->start(ui->leInterBdd->text().toInt()*1000);
+       m_interServeur->start(ui->leInterServ->text().toInt()*1000);
+       m_interSgbd->start(ui->leInterBdd->text().toInt()*1000);
 
        // verrouille l'IHM
        setIhm(false);  // verrouille l'IHM quand acquisition
@@ -100,14 +100,14 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
 
    default: // stop acquisition
 
-       interServeur->stop();
-       delete interServeur;
-       interSgbd->stop();
-       delete interSgbd;
-       delete thPeriph;
-       delete thI2c;
-       delete thSpi;
-       delete mShm;
+       m_interServeur->stop();
+       delete m_interServeur;
+       m_interSgbd->stop();
+       delete m_interSgbd;
+       delete m_thPeriph;
+       delete m_thI2c;
+       delete m_thSpi;
+       delete m_shm;
        ui->pbStartStop->setText("Start acquisition");
        setIhm(true);
        break;
@@ -135,13 +135,13 @@ void CIhmAppFormQtCpp::on_pbOnOffLed_clicked()
         ui->laRouge->setVisible(true);
         ui->laNoir->setVisible(false);
         ui->pbOnOffLed->setText("Eteindre");
-        led->switchOn();
+        m_led->switchOn();
         break;
     default:  // éteindre
         ui->laRouge->setVisible(false);
         ui->laNoir->setVisible(true);
         ui->pbOnOffLed->setText("Allumer");
-        led->switchOff();
+        m_led->switchOff();
         break;
     } // sw
 }

@@ -15,27 +15,27 @@ TEMPLATE = app
 SOURCES += main.cpp\
     cled.cpp \
     cihmappformqtcpp.cpp \
-    cbouton.cpp \
     cperiphrs232.cpp \
     csharedmemory.cpp \
     ../biblis/cgpio.cpp \
     ../biblis/ci2c.cpp \
     ../biblis/cspi.cpp \
-    ccapteuri2csht20.cpp \
-    ccapteurspitc72.cpp
+    ccapteur_i2c_sht20.cpp \
+    ccapteur_spi_tc72.cpp \
+    cboutonpoussoir.cpp
 
 HEADERS  += \
     cled.h \
     cihmappformqtcpp.h \
-    cbouton.h \
     cperiphrs232.h \
     global.h \
     csharedmemory.h \
     ../biblis/cgpio.h \
     ../biblis/ci2c.h \
     ../biblis/cspi.h \
-    ccapteuri2csht20.h \
-    ccapteurspitc72.h
+    ccapteur_i2c_sht20.h \
+    ccapteur_spi_tc72.h \
+    cboutonpoussoir.h
 
 FORMS    += \
     cihmappformqtcpp.ui

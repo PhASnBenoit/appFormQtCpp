@@ -1,20 +1,20 @@
-#ifndef CBOUTON_H
-#define CBOUTON_H
+#ifndef CBOUTONPOUSSOIR_H
+#define CBOUTONPOUSSOIR_H
 
 #include <QThread>
 #include "/home/pi/devQt/biblis/cgpio.h"
 
-class CBouton : public QThread
+class CBoutonPoussoir : public QThread
 {
     Q_OBJECT
 public:
-    explicit CBouton(QObject *parent = 0, int noGpio = 22);
-    ~CBouton();
+    explicit CBoutonPoussoir(QObject *parent = 0, int noGpio = 22);
+    ~CBoutonPoussoir();
 
 private:
     CGpio *gpio;
     void run();
-    int mValMem;  // état mémoire
+    int m_valMem;  // état mémoire
 
 signals:
     void sigEtatBouton(bool etat);
@@ -25,4 +25,4 @@ private slots:
 
 };
 
-#endif // CBOUTON_H
+#endif // CBOUTONPOUSSOIR_H
