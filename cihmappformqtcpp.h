@@ -62,6 +62,7 @@ private:
     QTimer *m_interPeriph;
     QTimer *m_interLcd;
     bool m_affLibre;
+    QThread *thAff;
     void setIhm(bool t);
 };
 

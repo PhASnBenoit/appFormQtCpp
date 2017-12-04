@@ -198,7 +198,10 @@ inline void CAff_i2c_GroveLcdRgb::command(int value)
 
 void CAff_i2c_GroveLcdRgb::afficherMesures(float tempTc72, float tempSht20, float humSht20)
 {
-    setColor(BLUE);
+    static int noC=0;
+    if (noC >3) noC=0;
+    setColor(noC);
+    noC++;
     setCursor(0,0);
     ecrire("T:"+QString::number(tempSht20,'f',1)+
            "°C H:"+QString::number(humSht20,'f',0)+"%RH ");

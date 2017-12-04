@@ -239,23 +239,24 @@ void CIhmAppFormQtCpp::on_pbId_clicked()
 
 void CIhmAppFormQtCpp::on_pbLcd_clicked()
 {
-    m_affLibre = false;
-    QThread *thAff;
-    thAff = new QThread(this);
-    m_aff->moveToThread(thAff);
-    connect(thAff, SIGNAL(started()), m_aff, SLOT(sequenceBienvenue()));
-    connect(m_aff, SIGNAL(workFinished()), thAff, SLOT(quit()));
-    connect(thAff, SIGNAL(finished()), thAff, SLOT(deleteLater()));
-    connect(thAff, SIGNAL(finished()), this, SLOT(affLibre()));
-    if (m_interLcd->isActive()) {
-        m_interLcd->stop();
-        connect(thAff, SIGNAL(finished()), m_interLcd, SLOT(start()));
-    } // if isactive
-    thAff->start();
-    
+    if (m_affLibre) {
+        m_affLibre = false;
+        thAff = new QThread();
+        m_aff->moveToThread(thAff);
+        connect(thAff, SIGNAL(started()), m_aff, SLOT(sequenceBienvenue()));
+        connect(m_aff, SIGNAL(workFinished()), thAff, SLOT(quit()));
+        connect(thAff, SIGNAL(finished()), thAff, SLOT(deleteLater()));
+        connect(thAff, SIGNAL(finished()), this, SLOT(affLibre()));
+        if (m_interLcd->isActive()) {
+            m_interLcd->stop();
+            connect(thAff, SIGNAL(finished()), m_interLcd, SLOT(start()));
+        } // if isactive
+        thAff->start();
+    } // if libre
 }
 
 void CIhmAppFormQtCpp::affLibre()
 {
     m_affLibre = true;
+    delete thAff;
 }
