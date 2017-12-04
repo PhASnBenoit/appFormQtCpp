@@ -2,6 +2,7 @@
 #define CSHAREDMEMORY_H
 
 #include <QSharedMemory>
+#include <QDebug>
 #include "global.h"
 
 // définition de la mémoire partagée

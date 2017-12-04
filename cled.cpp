@@ -9,6 +9,7 @@ CLed::CLed(QObject *parent, int noGpio) : QObject(parent)
 CLed::~CLed()
 {
     delete gpio;
+    qDebug() << "Objet CLed détruit !";
 }
 
 int CLed::switchOn()

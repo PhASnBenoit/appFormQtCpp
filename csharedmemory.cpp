@@ -11,6 +11,7 @@ CSharedMemory::CSharedMemory(QObject *parent, int size) :
 CSharedMemory::~CSharedMemory()
 {
     detach();
+    qDebug() << "Objet CSharedMemory détruit !";
 }
 
 int CSharedMemory::attacherOuCreer()

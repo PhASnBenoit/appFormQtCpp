@@ -26,6 +26,7 @@ class CCapteur_Spi_TC72 : public QThread
 public:
     explicit CCapteur_Spi_TC72(QObject *parent = 0, int ce = 0, int noMes = 0);
     ~CCapteur_Spi_TC72();
+    bool m_fin;
 
 private:
     CSharedMemory *m_shm;

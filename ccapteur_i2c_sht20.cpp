@@ -9,6 +9,7 @@ CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent) :
 
     m_i2c = CI2c::getInstance(this, '1');
     connect(m_i2c, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
+    m_fin=false;
 }
 
 CCapteur_I2c_SHT20::~CCapteur_I2c_SHT20()
@@ -16,13 +17,15 @@ CCapteur_I2c_SHT20::~CCapteur_I2c_SHT20()
     CI2c::freeInstance();
     m_shm->detach();
     delete m_shm;
+    qDebug() << "Objet CCapteur_I2c_SHT20 détruit !";
+
 }
 
 void CCapteur_I2c_SHT20::run()
 {
     float mesureHum, mesureTemp;
 
-     while(1) {
+     while(!m_fin) {
          // écriture de la mesure dans le segment de mémoire partagé
          mesureHum = lireMesureHum();
          usleep(100000);

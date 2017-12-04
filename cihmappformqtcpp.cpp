@@ -61,9 +61,21 @@ CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
     delete m_led;
     delete m_aff;
     // arrêter avant le thread
-    delete m_thBt;
-    if (m_thI2c) delete m_thI2c;
-    if (m_thSpi) delete m_thSpi;
+    if (m_thBt->isRunning()) {
+        m_thBt->m_fin=true;
+        m_thBt->wait(3000);
+        delete m_thBt;
+    }
+    if (m_thI2c->isRunning()) {
+        m_thI2c->m_fin=true;
+        m_thI2c->wait(3000); // max 3s
+        delete m_thI2c;
+    } // if i2c
+    if (m_thSpi->isRunning()) {
+        m_thSpi->m_fin=true;
+        m_thSpi->wait(3000);
+        delete m_thSpi;
+    } // if spi
     m_shm->detach();
     delete m_shm;
     delete ui;  // toujours en dernier
@@ -98,11 +110,15 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        // lance les thread capteurs
        m_thI2c = new CCapteur_I2c_SHT20(this);
        connect(m_thI2c, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       connect(m_thI2c, SIGNAL(finished()), m_thI2c, SLOT(deleteLater()));
+       connect(m_thI2c, SIGNAL(destroyed(QObject*)), m_thI2c, SLOT(deleteLater()));
        m_thI2c->start();
 
 //       m_tc72 = new CSpiIoctl();
        m_thSpi = new CCapteur_Spi_TC72(this, 0, 0);
        connect(m_thSpi, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       connect(m_thSpi, SIGNAL(finished()), m_thI2c, SLOT(deleteLater()));
+       connect(m_thSpi, SIGNAL(destroyed(QObject*)), m_thI2c, SLOT(deleteLater()));
        m_thSpi->start();
 /*
        // ouvrir le port série avec le terminal

@@ -18,6 +18,8 @@ CPeriphRs232::~CPeriphRs232()
 {
     mShm->detach();
     delete mShm;
+    qDebug() << "Objet CPeriphRs232 détruit !";
+
 }
 
 void CPeriphRs232::run()

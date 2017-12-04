@@ -2,6 +2,7 @@
 #define CPERIPHRS232_H
 
 #include <QThread>
+#include <QDebug>
 #include <QSerialPort>  // ne pas oublier d'ajouter QT+=serialport dans .pro
 #include <QSharedMemory>
 #include "global.h"

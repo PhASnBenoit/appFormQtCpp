@@ -6,6 +6,7 @@ CCapteur_Spi_TC72::CCapteur_Spi_TC72(QObject *parent, int ce, int noMes) :
     m_ce = ce;
     m_etat = ONESHOT;  // eco d'énergie
     m_noMes = noMes;   // position dans la shm
+    m_fin=false;
 
     m_shm = new CSharedMemory(this, 0);
     connect(m_shm, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
@@ -22,6 +23,8 @@ CCapteur_Spi_TC72::~CCapteur_Spi_TC72()
     delete m_spi;
     m_shm->detach();
     delete m_shm;
+    qDebug() << "Objet CCapteur_Spi_TC72 détruit !";
+
 }
 
 int CCapteur_Spi_TC72::setMode(T_ETAT etat)
@@ -92,7 +95,7 @@ void CCapteur_Spi_TC72::run()
 {
     float temp;
     setMode(CONTINUOUS);
-    while (1) {
+    while (!m_fin) {
         temp = getTemperature();
 //        qDebug() << QString::number(temp);
         m_shm->ecrire(m_noMes, temp);

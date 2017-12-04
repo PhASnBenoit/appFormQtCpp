@@ -10,6 +10,7 @@ class CBoutonPoussoir : public QThread
 public:
     explicit CBoutonPoussoir(QObject *parent = 0, int noGpio = 22);
     ~CBoutonPoussoir();
+    bool m_fin;
 
 private:
     CGpio *gpio;

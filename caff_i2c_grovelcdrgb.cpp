@@ -13,6 +13,7 @@ CAff_i2c_GroveLcdRgb::~CAff_i2c_GroveLcdRgb()
   clear();
   setColorOff();
   CI2c::freeInstance();
+  qDebug() << "Objet CAff_i2c_GroveLcdRgb détruit !";
 }
 
 void CAff_i2c_GroveLcdRgb::begin(int lines, int dotsize)
