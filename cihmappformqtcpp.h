@@ -13,8 +13,9 @@
 #include "ccapteur_spi_tc72.h"
 #include "csharedmemory.h"
 #include "caff_i2c_grovelcdrgb.h"
-//#include "cspiioctl.h"
+#include "cclienttcp.h"
 #include "global.h"
+//#include "cspiioctl.h"
 
 namespace Ui {
 class CIhmAppFormQtCpp;
@@ -56,6 +57,7 @@ private:
     CPeriphRs232 *m_thPeriph;
     CCapteur_I2c_SHT20 *m_thI2c;
     CCapteur_Spi_TC72 *m_thSpi;
+    CClientTcp *m_clientTcp;
     QTimer *m_interServeur;
     QTimer *m_interSgbd;
     QTimer *m_interMes;
