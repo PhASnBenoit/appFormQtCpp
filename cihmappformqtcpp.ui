@@ -277,9 +277,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>340</y>
+      <y>520</y>
       <width>671</width>
-      <height>411</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -446,6 +446,32 @@
     <property name="text">
      <string>ID TC72</string>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="gbLcd">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>340</y>
+      <width>671</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Commandes écran</string>
+    </property>
+    <widget class="QPushButton" name="pbLcd">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>91</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Afficher</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

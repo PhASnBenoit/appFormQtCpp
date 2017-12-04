@@ -20,12 +20,12 @@ class CCapteur_I2c_SHT20 : public QThread
 public:
     explicit CCapteur_I2c_SHT20(QObject *parent = 0);
     ~CCapteur_I2c_SHT20();
-    void run();  // méthode virtuelle à implémenter, contenu du thread
 
 private:
     CSharedMemory *m_shm;
     CI2c *m_i2c;
 
+    void run();  // méthode virtuelle à implémenter, contenu du thread
     float lireMesureHum();
     float lireMesureTemp();
 signals:

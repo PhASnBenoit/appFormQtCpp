@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     ccapteur_i2c_sht20.cpp \
     ccapteur_spi_tc72.cpp \
     cboutonpoussoir.cpp \
-    cspiioctl.cpp
+    cspiioctl.cpp \
+    caff_i2c_grovelcdrgb.cpp
 
 HEADERS  += \
     cled.h \
@@ -37,7 +38,8 @@ HEADERS  += \
     ccapteur_i2c_sht20.h \
     ccapteur_spi_tc72.h \
     cboutonpoussoir.h \
-    cspiioctl.h
+    cspiioctl.h \
+    caff_i2c_grovelcdrgb.h
 
 FORMS    += \
     cihmappformqtcpp.ui
