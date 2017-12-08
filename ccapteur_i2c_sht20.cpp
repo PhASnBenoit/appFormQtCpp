@@ -1,6 +1,6 @@
 #include "ccapteur_i2c_sht20.h"
 
-CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent) :
+CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent, int noMesBase) :
     QThread(parent)
 {
     m_shm = new CSharedMemory(this);
@@ -10,6 +10,8 @@ CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent) :
     m_i2c = CI2c::getInstance(this, '1');
     connect(m_i2c, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     m_fin=false;
+    m_noMesBase = noMesBase;
+    qDebug() << "Objet CCapteur_I2c_SHT20 créé !";
 }
 
 CCapteur_I2c_SHT20::~CCapteur_I2c_SHT20()
@@ -31,8 +33,8 @@ void CCapteur_I2c_SHT20::run()
          usleep(100000);
          mesureTemp = lireMesureTemp();
          m_shm->lock(); // on prend la mémoire partagée
-         m_shm->ecrire(1, mesureTemp);  // écriture dans la mémoire partagée
-         m_shm->ecrire(2, mesureHum);  // écriture dans la mémoire partagée
+         m_shm->ecrire(m_noMesBase, mesureTemp);  // écriture dans la mémoire partagée
+         m_shm->ecrire(m_noMesBase+1, mesureHum);  // écriture dans la mémoire partagée
          m_shm->unlock(); // on libère la mémmoire partagée
          sleep(1); // lecture toutes les s
      } // while

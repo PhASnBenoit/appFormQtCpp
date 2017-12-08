@@ -69,10 +69,18 @@
      </property>
      <layout class="QVBoxLayout" name="vlValSeuils">
       <item>
-       <widget class="QLineEdit" name="leSeuilTempI2c"/>
+       <widget class="QLineEdit" name="leSeuilTempI2c">
+        <property name="text">
+         <string>40</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="leSeuilHumI2c"/>
+       <widget class="QLineEdit" name="leSeuilHumI2c">
+        <property name="text">
+         <string>30</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -316,7 +324,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="leSeuilTempSpi"/>
+       <widget class="QLineEdit" name="leSeuilTempSpi">
+        <property name="text">
+         <string>40</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -452,7 +464,7 @@
      <rect>
       <x>10</x>
       <y>340</y>
-      <width>671</width>
+      <width>151</width>
       <height>151</height>
      </rect>
     </property>
@@ -470,6 +482,52 @@
      </property>
      <property name="text">
       <string>Afficher</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="gbEcranRs">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>340</y>
+      <width>501</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Ecran RS232C</string>
+    </property>
+    <widget class="QPushButton" name="pbEnvoyer">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>91</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Envoyer</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="teRecevoir">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>30</y>
+       <width>301</width>
+       <height>111</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leEnvoyer">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>171</width>
+       <height>29</height>
+      </rect>
      </property>
     </widget>
    </widget>
@@ -535,7 +593,7 @@
           <string>99</string>
          </property>
          <property name="text">
-          <string>1</string>
+          <string>2</string>
          </property>
         </widget>
        </item>
@@ -555,7 +613,7 @@
           <string>99</string>
          </property>
          <property name="text">
-          <string>2</string>
+          <string>10</string>
          </property>
         </widget>
        </item>
@@ -879,7 +937,7 @@
           <string>999.999.999.999</string>
          </property>
          <property name="text">
-          <string>192.168.2.100</string>
+          <string>192.168.1.47</string>
          </property>
         </widget>
        </item>
@@ -953,7 +1011,7 @@
           <string>999.999.999.999</string>
          </property>
          <property name="text">
-          <string>127.0.0.1</string>
+          <string>192.168.1.47</string>
          </property>
         </widget>
        </item>
@@ -967,14 +1025,14 @@
        <item>
         <widget class="QLineEdit" name="leUserSgbd">
          <property name="text">
-          <string>root</string>
+          <string>bddFormation</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="lePassSgbd">
          <property name="text">
-          <string>admin</string>
+          <string>bddFormation</string>
          </property>
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>

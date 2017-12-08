@@ -8,6 +8,7 @@ CClientTcp::CClientTcp(QObject *parent) :
     connect(sock, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     connect(sock, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
+    qDebug() << "Objet CClientTcp créé !";
 }
 
 CClientTcp::~CClientTcp()
@@ -41,29 +42,41 @@ void CClientTcp::deconnecter()
 
 void CClientTcp::onConnected()
 {
-    qDebug() << "Client connecté.";
+//    qDebug() << "Client connecté.";
     emit sigEvenement("CON"); // communication avec IHM
 }
 
 void CClientTcp::onDisconnected()
 {
-    qDebug() << "Client déconnecté.";
+//    qDebug() << "Client déconnecté.";
     emit sigEvenement("DEC"); // communication avec IHM
 }
 
 void CClientTcp::onReadyRead()
 {
-    int nb = sock->bytesAvailable();
-    qDebug() << nb << " octets à lire : ";
+    //int nb = sock->bytesAvailable();
+//    qDebug() << nb << " octets à lire : ";
 
     QByteArray data;
     data = sock->readAll();
-    qDebug() << "CClientTcp::onReadyRead " << data;
+//    qDebug() << "CClientTcp::onReadyRead " << data;
     emit sigData(QString(data));  // transmission à l'IHM par signal
 }
 
 void CClientTcp::onSocketError(QAbstractSocket::SocketError err)
 {
-  qDebug() << "CClientTcp::onSocketError erreur !";
-  emit sigErreur(err);
+    QString mess="CClientTcp::onSocketError erreur !";
+    switch (err) {
+      case QAbstractSocket::ConnectionRefusedError:
+        mess = "Connexion refusée par le serveur !";
+      break;
+    case QAbstractSocket::NetworkError:
+        mess = "Coupure de liaison réseau !";
+    break;
+    default:
+        mess="Erreur réseau à déterminer !";
+      break;
+    } // sw
+//  qDebug() << mess;
+    emit sigErreur(mess);
 }

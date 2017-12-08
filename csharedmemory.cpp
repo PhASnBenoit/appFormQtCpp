@@ -6,6 +6,7 @@ CSharedMemory::CSharedMemory(QObject *parent, int size) :
     setKey(KEY);
     m_taille = size;
     m_adrBase = NULL;
+    qDebug() << "Objet CSharedMemory créé par " << parent->thread();
 }
 
 CSharedMemory::~CSharedMemory()

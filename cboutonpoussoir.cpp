@@ -7,6 +7,7 @@ CBoutonPoussoir::CBoutonPoussoir(QObject *parent, int noGpio) :
     connect(gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     m_valMem = false;
     m_fin=false;
+    qDebug() << "Démarrage de l'objet CBoutonPoussoir";
 }
 
 CBoutonPoussoir::~CBoutonPoussoir()

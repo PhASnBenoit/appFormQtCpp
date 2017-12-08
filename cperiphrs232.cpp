@@ -12,6 +12,7 @@ CPeriphRs232::CPeriphRs232(QObject *parent, QString port, int inter) :
         emit sigErreur(mess);
       return;
     } // if isattached
+    qDebug() << "Objet CPeriphRs232 créé !";
 }
 
 CPeriphRs232::~CPeriphRs232()

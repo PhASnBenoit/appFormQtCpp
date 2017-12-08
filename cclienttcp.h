@@ -17,7 +17,7 @@ public:
 
 signals:
     void sigData(QString data);
-    void sigErreur(QAbstractSocket::SocketError);
+    void sigErreur(QString mess);
     void sigEvenement(QString eve);
 
 public slots:

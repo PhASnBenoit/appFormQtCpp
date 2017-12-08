@@ -197,17 +197,17 @@ inline void CAff_i2c_GroveLcdRgb::command(int value)
     QThread::msleep(200);
 }
 
-void CAff_i2c_GroveLcdRgb::afficherMesures(float tempTc72, float tempSht20, float humSht20)
+void CAff_i2c_GroveLcdRgb::afficherMesures(float tempTc72, float tempSht20, float humSht20, bool seuil)
 {
-    static int noC=0;
-    if (noC >3) noC=0;
+    static int noC=2;
+    if (noC==2) noC=3; else noC=2;
+    if (seuil) noC=1;
     setColor(noC);
-    noC++;
     setCursor(0,0);
     ecrire("T:"+QString::number(tempSht20,'f',1)+
-           "°C H:"+QString::number(humSht20,'f',0)+"%RH ");
+           "dC H:"+QString::number(humSht20,'f',0)+"%RH ");
     setCursor(0,1);
-    ecrire("SPI T:"+QString::number(tempTc72,'f',1)+"°C ");
+    ecrire("SPI T:"+QString::number(tempTc72,'f',1)+"dC ");
 }
 
 void CAff_i2c_GroveLcdRgb::sequenceBienvenue()
@@ -216,13 +216,13 @@ void CAff_i2c_GroveLcdRgb::sequenceBienvenue()
     setRGB(0,0,255);
     setCursor(5, 0);
     ecrire("Bonjour");
-    setCursor(1, 1);
-    ecrire("Afficheur i2c");
+    setCursor(4, 1);
+    ecrire("Apprenant");
     QThread::sleep(2);
     clear();
     setColor(WHITE);
     setCursor(0, 0);
-    ecrire("HO ...");
+    ecrire("QT/C++...");
     setCursor(0, 1);
     ecrire("YES !!!");
     QThread::usleep(250000);

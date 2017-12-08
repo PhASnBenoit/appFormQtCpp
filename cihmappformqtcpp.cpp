@@ -8,16 +8,15 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     ui->setupUi(this);
     connect(this, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
     setIhm(true);
-
     // états
     m_affLibre=true;
+    m_seuil=false;   // dépassement seuil mesure
 
     // BDD
     m_bdd = QSqlDatabase::addDatabase("QMYSQL");
     if (!m_bdd.isValid()) {
         emit sigErreur("CIhmAppFormQtCpp::CIhmAppFormQtCpp Driver BDD non reconnu !");
     } // if bdd
-
     // initialisation de la mémoire partagée
     m_shm = new CSharedMemory(this, NBMESURES*sizeof(float));
     m_shm->attacherOuCreer();
@@ -30,17 +29,16 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     m_thBt->start();
     // instanciation de l'afficheur LCD
     m_aff = new CAff_i2c_GroveLcdRgb();
-
     // init des pointeurs vers capteurs
     m_thI2c = NULL;
     m_thSpi = NULL;
 
     m_interServeur = new QTimer(this);
     connect(m_interServeur, SIGNAL(timeout()), this, SLOT(on_timerServeur()));
-/*
+
     m_interPeriph = new QTimer(this);
     connect(m_interPeriph, SIGNAL(timeout()), this, SLOT(on_timerPeriph()));
-    m_interSgbd = new QTimer(this);
+/*    m_interSgbd = new QTimer(this);
     connect(m_interSgbd, SIGNAL(timeout()), this, SLOT(on_timerSgbd()));
 */
     // init du timer de récupération des mesures
@@ -59,6 +57,8 @@ CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
 */
     m_interMes->stop();
     delete m_interMes;
+    m_interPeriph->stop();
+    delete m_interPeriph,
     delete m_led;
     delete m_aff;
     delete m_clientTcp;
@@ -112,24 +112,24 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        m_clientTcp->connecter(ui->leAdrServ->text(), ui->lePortServ->text());
 
        // lance les thread capteurs
-       m_thI2c = new CCapteur_I2c_SHT20(this);
+       m_thI2c = new CCapteur_I2c_SHT20(this,1);
        connect(m_thI2c, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
        connect(m_thI2c, SIGNAL(finished()), m_thI2c, SLOT(deleteLater()));
        connect(m_thI2c, SIGNAL(destroyed(QObject*)), m_thI2c, SLOT(deleteLater()));
        m_thI2c->start();
 
 //       m_tc72 = new CSpiIoctl();
-       m_thSpi = new CCapteur_Spi_TC72(this, 0, 0);
+       m_thSpi = new CCapteur_Spi_TC72(this, '0', 0);
        connect(m_thSpi, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
        connect(m_thSpi, SIGNAL(finished()), m_thI2c, SLOT(deleteLater()));
        connect(m_thSpi, SIGNAL(destroyed(QObject*)), m_thI2c, SLOT(deleteLater()));
        m_thSpi->start();
-/*
+
        // ouvrir le port série avec le terminal
        m_thPeriph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText(), ui->leInterPeriph->text().toInt()*1000);
        connect(m_thPeriph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
        m_thPeriph->start();
-*/
+
        // lance les timers
        //       m_interSgbd->start(ui->leInterBdd->text().toInt()*1000);
        //       m_interPeriph->start(ui->leInterPeriph->text().toInt()*1000);
@@ -197,6 +197,11 @@ void CIhmAppFormQtCpp::on_pbOnOffLed_clicked()
 
 void CIhmAppFormQtCpp::on_timerMes()
 {
+    // vérification des seuils
+    m_seuil = false;
+    if (m_shm->lire(2) > ui->leSeuilHumI2c->text().toFloat()) m_seuil=true;
+    if (m_shm->lire(1) > ui->leSeuilTempI2c->text().toFloat()) m_seuil=true;
+    if (m_shm->lire(0) > ui->leSeuilTempSpi->text().toFloat()) m_seuil=true;
     ui->leTempSpi->setText(QString::number(m_shm->lire(0),'f',1));  // temp spi
     ui->leTempI2c->setText(QString::number(m_shm->lire(1),'f',1));  // temp i2c
     ui->leHumI2c->setText(QString::number(m_shm->lire(2),'f',1));  // hum i2c
@@ -224,7 +229,7 @@ void CIhmAppFormQtCpp::on_timerPeriph()
 void CIhmAppFormQtCpp::on_timerLcd()
 {
     if(m_affLibre)
-        m_aff->afficherMesures(m_shm->lire(0),m_shm->lire(1), m_shm->lire(2));
+        m_aff->afficherMesures(m_shm->lire(0),m_shm->lire(1), m_shm->lire(2), m_seuil);
 }
 
 void CIhmAppFormQtCpp::setIhm(bool t)
@@ -255,8 +260,10 @@ void CIhmAppFormQtCpp::setIhm(bool t)
 
 void CIhmAppFormQtCpp::on_pbId_clicked()
 {
-    /*
+
     quint8 id=m_thSpi->getManufacturer();
+    ui->teTexte->append(QString::number(id,16));
+/*
     unsigned char trame[5];
     int res;
     trame[0] = 0x03;

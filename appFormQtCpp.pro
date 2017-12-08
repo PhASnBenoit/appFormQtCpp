@@ -23,9 +23,10 @@ SOURCES += main.cpp\
     ccapteur_i2c_sht20.cpp \
     ccapteur_spi_tc72.cpp \
     cboutonpoussoir.cpp \
-    cspiioctl.cpp \
     caff_i2c_grovelcdrgb.cpp \
-    cclienttcp.cpp
+    cclienttcp.cpp \
+    cclientsgbd.cpp \
+    ../biblis/crs232c.cpp
 
 HEADERS  += \
     cled.h \
@@ -39,9 +40,10 @@ HEADERS  += \
     ccapteur_i2c_sht20.h \
     ccapteur_spi_tc72.h \
     cboutonpoussoir.h \
-    cspiioctl.h \
     caff_i2c_grovelcdrgb.h \
-    cclienttcp.h
+    cclienttcp.h \
+    cclientsgbd.h \
+    ../biblis/crs232c.h
 
 FORMS    += \
     cihmappformqtcpp.ui

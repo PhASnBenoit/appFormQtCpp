@@ -89,7 +89,7 @@ public:
     void setCursor(int, int);
     int ecrire(QString text);
     void command(int);
-    void afficherMesures(float tempTc72, float tempSht20, float humSht20);
+    void afficherMesures(float tempTc72, float tempSht20, float humSht20, bool seuil);
 
     // color control
     void setRGB(unsigned char r, unsigned char g, unsigned char b);               // set rgb

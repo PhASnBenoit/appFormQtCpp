@@ -16,7 +16,7 @@
 
 typedef enum {
     CONTINUOUS=0,
-    ONESHOT
+    ONESHOT=0x11
 } T_ETAT;
 
 class CCapteur_Spi_TC72 : public QThread
@@ -27,6 +27,7 @@ public:
     explicit CCapteur_Spi_TC72(QObject *parent = 0, int ce = 0, int noMes = 0);
     ~CCapteur_Spi_TC72();
     bool m_fin;
+    quint8 getManufacturer();
 
 private:
     CSharedMemory *m_shm;
@@ -39,7 +40,6 @@ private:
     int setMode(T_ETAT etat); // continous ou oneshot
     int reset();
     float getTemperature();
-    quint8 getManufacturer();
     quint8 getControleRegister();
     int setControleRegister(quint8 val);
 
