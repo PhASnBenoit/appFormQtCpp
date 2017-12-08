@@ -58,7 +58,7 @@ int CCapteur_Spi_TC72::reset()
 
 float CCapteur_Spi_TC72::getTemperature()
 {
-    quint8 data[4] = {REG_MSB, 0xff, 0xff, 0xff};
+    quint8 data[4] = {REG_MSB};
     int nb=m_spi->lireEcrire(data,4); // demande lecture
     if (nb != 4) {
          emit sigErreur("CCapteur_Spi_TC72::getTemperature ERREUR écriture");
@@ -72,7 +72,7 @@ float CCapteur_Spi_TC72::getTemperature()
 
 quint8 CCapteur_Spi_TC72::getManufacturer()
 {
-    quint8 data[2] = {REG_ID, 0xff};
+    quint8 data[2] = {REG_ID};
     int nb=m_spi->lireEcrire(data,2); // demande lecture
     if (nb != 2) {
          emit sigErreur("CCapteur_Spi_TC72::getManufacturer ERREUR écriture");
