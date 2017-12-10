@@ -3,7 +3,7 @@
 CBoutonPoussoir::CBoutonPoussoir(QObject *parent, int noGpio) :
     QThread(parent)
 {
-    gpio = new CGpio(noGpio, IN);
+    gpio = new CGpio(this, noGpio, IN);
     connect(gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     m_valMem = false;
     m_fin=false;

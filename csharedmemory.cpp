@@ -3,16 +3,17 @@
 CSharedMemory::CSharedMemory(QObject *parent, int size) :
     QSharedMemory(parent)
 {
+    m_parent = parent;
     setKey(KEY);
     m_taille = size;
     m_adrBase = NULL;
-    qDebug() << "Objet CSharedMemory créé par " << parent->thread();
+    qDebug() << "Objet CSharedMemory créé par " << m_parent->thread();
 }
 
 CSharedMemory::~CSharedMemory()
 {
     detach();
-    qDebug() << "Objet CSharedMemory détruit !";
+    qDebug() << "Objet CSharedMemory détruit par " << m_parent->thread();
 }
 
 int CSharedMemory::attacherOuCreer()

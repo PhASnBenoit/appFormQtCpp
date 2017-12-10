@@ -2,6 +2,7 @@
 
 CPeriphRs232::CPeriphRs232(QObject *parent, QString nomPort)
 {
+    m_parent = parent;
     // initialisation de la mémoire partagée
     mShm = new QSharedMemory(KEY,this);
     mShm->attach();   // tentative de s'attacher

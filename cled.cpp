@@ -2,7 +2,7 @@
 
 CLed::CLed(QObject *parent, int noGpio) : QObject(parent)
 {
-    gpio = new CGpio(noGpio, OUT);
+    gpio = new CGpio(this, noGpio, OUT);
     connect(gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     qDebug() << "Objet CLed créé !";
 }

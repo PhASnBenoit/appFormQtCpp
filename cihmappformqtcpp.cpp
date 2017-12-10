@@ -32,6 +32,7 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
 
     // instanciation de l'afficheur LCD
     m_aff = new CAff_i2c_GroveLcdRgb();
+    connect(m_aff, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
 
     // instanciation du periphRS232C
     m_periph = new CPeriphRs232(this, ui->cbPorts->currentText());
@@ -93,18 +94,7 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        // réglages IHM de départ
        setIhm(false);
        ui->pbStartStop->setText("Stop acquisitions");
-/*
-       // ouverture de la base de données
-       m_bdd.setHostName(ui->leAdrSgbd->text());
-       m_bdd.setDatabaseName(ui->leNomBdd->text());
-       m_bdd.setUserName(ui->leUserSgbd->text());
-       m_bdd.setPassword(ui->lePassSgbd->text());
-       ok = m_bdd.open();
-       if (!ok) {
-           emit sigErreur("CIhmAppFormQtCpp::on_pbStartStop_clicked Ouverture de la BDD impossible !");
-           return;
-       } // if ok
-*/
+
        // connexion au serveur réseau
        m_clientTcp = new CClientTcp(this);
        connect(m_clientTcp, SIGNAL(sigEvenement(QString)), this, SLOT(on_Erreur(QString)));

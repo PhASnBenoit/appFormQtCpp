@@ -27,6 +27,7 @@ public:
 private:
     int m_taille;
     float *m_adrBase;
+    QObject *m_parent;
 
 signals:
     void sigErreur(QString mess);

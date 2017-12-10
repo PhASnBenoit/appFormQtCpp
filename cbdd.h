@@ -18,7 +18,6 @@ public:
 private:
     QSqlDatabase m_bdd;
 
-
 signals:
     void sigErreur(QString mess);
 

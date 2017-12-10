@@ -22,6 +22,7 @@ public:
 private:
     QSharedMemory *mShm;
     CRs232c *rs;
+    QObject *m_parent;
 
 signals:
     void sigErreur(QString mess);
