@@ -8,6 +8,7 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     ui->setupUi(this);
     connect(this, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
     setIhm(true);
+    ui->cbPorts->addItems(CPeriphRs232::portsDisponibles());
     // états
     m_affLibre=true;
     m_seuil=false;   // dépassement seuil mesure
@@ -17,66 +18,65 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     if (!m_bdd.isValid()) {
         emit sigErreur("CIhmAppFormQtCpp::CIhmAppFormQtCpp Driver BDD non reconnu !");
     } // if bdd
+
     // initialisation de la mémoire partagée
     m_shm = new CSharedMemory(this, NBMESURES*sizeof(float));
     m_shm->attacherOuCreer();
     // intanciation de l'objet LED
     m_led = new CLed(this, GPIO_LED);
+
     // lance thread CBoutonPoussoir
     m_thBt = new CBoutonPoussoir(this, GPIO_BOUTONPOUSSOIR);
     connect(m_thBt, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
     connect(m_thBt, SIGNAL(sigEtatBouton(bool)), this, SLOT(on_etatBouton(bool)));
     m_thBt->start();
+
     // instanciation de l'afficheur LCD
     m_aff = new CAff_i2c_GroveLcdRgb();
+
+    // instanciation du periphRS232C
+    m_periph = new CPeriphRs232(this, ui->cbPorts->currentText());
+    connect(m_periph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+    connect(m_periph, SIGNAL(sigData(QString)), this, SLOT(on_recevoirDataDuPeriph(QString)));
+
     // init des pointeurs vers capteurs
     m_thI2c = NULL;
     m_thSpi = NULL;
 
+    // init des timers
     m_interServeur = new QTimer(this);
     connect(m_interServeur, SIGNAL(timeout()), this, SLOT(on_timerServeur()));
-
-    m_interPeriph = new QTimer(this);
-    connect(m_interPeriph, SIGNAL(timeout()), this, SLOT(on_timerPeriph()));
-/*    m_interSgbd = new QTimer(this);
-    connect(m_interSgbd, SIGNAL(timeout()), this, SLOT(on_timerSgbd()));
-*/
     // init du timer de récupération des mesures
     m_interMes = new QTimer(this);
     connect(m_interMes, SIGNAL(timeout()), this, SLOT(on_timerMes()));
     // init timer affichage LCD
     m_interLcd = new QTimer(this);
     connect(m_interLcd, SIGNAL(timeout()), this, SLOT(on_timerLcd()));
+    m_interSgbd = new QTimer(this);
+    connect(m_interSgbd, SIGNAL(timeout()), this, SLOT(on_timerSgbd()));
 }
 
 CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
 {
-/*    delete m_interServeur;
-    delete m_interSgbd;
-    delete m_interPeriph;
-*/
+    stopAll(); // stop timers et détruit mesures
+    // détruit les timers
+    m_interServeur->stop();
+    delete m_interServeur;
     m_interMes->stop();
     delete m_interMes;
-    m_interPeriph->stop();
-    delete m_interPeriph,
+    m_interLcd->stop();
+    delete m_interLcd;
+    m_interSgbd->stop();
+    delete m_interSgbd;
+    // détruit les objets
     delete m_led;
     delete m_aff;
-    delete m_clientTcp;
     if (m_thBt->isRunning()) {
         m_thBt->m_fin=true;
-        m_thBt->wait(3000);
+        m_thBt->wait(TEMPS);
         delete m_thBt;
     } // if bt
-    if (m_thI2c->isRunning()) {
-        m_thI2c->m_fin=true;
-        m_thI2c->wait(3000); // max 3s
-        delete m_thI2c;
-    } // if i2c
-    if (m_thSpi->isRunning()) {
-        m_thSpi->m_fin=true;
-        m_thSpi->wait(3000);
-        delete m_thSpi;
-    } // if spi
+    // détruit les threads
     m_shm->detach();
     delete m_shm;
     delete ui;  // toujours en dernier
@@ -118,45 +118,21 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        connect(m_thI2c, SIGNAL(destroyed(QObject*)), m_thI2c, SLOT(deleteLater()));
        m_thI2c->start();
 
-//       m_tc72 = new CSpiIoctl();
        m_thSpi = new CCapteur_Spi_TC72(this, '0', 0);
        connect(m_thSpi, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
        connect(m_thSpi, SIGNAL(finished()), m_thI2c, SLOT(deleteLater()));
        connect(m_thSpi, SIGNAL(destroyed(QObject*)), m_thI2c, SLOT(deleteLater()));
        m_thSpi->start();
 
-       // ouvrir le port série avec le terminal
-       m_thPeriph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText(), ui->leInterPeriph->text().toInt()*1000);
-       connect(m_thPeriph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-       m_thPeriph->start();
-
        // lance les timers
-       //       m_interSgbd->start(ui->leInterBdd->text().toInt()*1000);
-       //       m_interPeriph->start(ui->leInterPeriph->text().toInt()*1000);
+       m_interSgbd->start(ui->leInterBdd->text().toInt()*1000);
        m_interServeur->start(ui->leInterServ->text().toInt()*1000);
        m_interMes->start(ui->leInterCapt->text().toInt()*1000);
        m_interLcd->start(ui->leInterCapt->text().toInt()*1000);
        break;
 
    default: // stop acquisitions
-       m_interServeur->stop();
-       delete m_interServeur;
-       delete m_interLcd;
-//       m_interSgbd->stop();
-//       delete m_interSgbd;
-//       delete m_thPeriph;
-       delete m_clientTcp;
-       if (m_thI2c->isRunning()) {
-           m_thI2c->m_fin=true;
-           m_thI2c->wait(3000); // max 3s
-           delete m_thI2c;
-       } // if i2c
-       if (m_thSpi->isRunning()) {
-           m_thSpi->m_fin=true;
-           m_thSpi->wait(3000);
-           delete m_thSpi;
-       } // if spi
-//       delete m_tc72;
+       stopAll();
        ui->pbStartStop->setText("Start acquisitions");
        setIhm(true);
        break;
@@ -217,13 +193,8 @@ void CIhmAppFormQtCpp::on_timerServeur()
     QString mesI2c = "SHC20 Temp:"+QString::number(m_shm->lire(1),'f',1)+"°C"+
             " Hum:"+QString::number(m_shm->lire(2),'f',1);
     m_clientTcp->emettre(mesI2c);
-    QString mesSpi = "TC72 Temp:"+QString::number(m_shm->lire(0),'f',1)+"%RH";
+    QString mesSpi = "TC72 Temp:"+QString::number(m_shm->lire(0),'f',1)+"°C";
     m_clientTcp->emettre(mesSpi);
-}
-
-void CIhmAppFormQtCpp::on_timerPeriph()
-{
-    
 }
 
 void CIhmAppFormQtCpp::on_timerLcd()
@@ -234,48 +205,39 @@ void CIhmAppFormQtCpp::on_timerLcd()
 
 void CIhmAppFormQtCpp::setIhm(bool t)
 {
-    ui->leInterBdd->setEnabled(t);
-    ui->leInterCapt->setEnabled(t);
-    ui->leInterPeriph->setEnabled(t);
-    ui->leInterServ->setEnabled(t);
-
-    ui->cbBits->setEnabled(t);
-    ui->cbParite->setEnabled(t);
-    ui->cbPorts->setEnabled(t);
-    ui->cbStop->setEnabled(t);
-    ui->cbVitesse->setEnabled(t);
-
-    ui->leAdrServ->setEnabled(t);
-    ui->lePortServ->setEnabled(t);
-
-    ui->leAdrSgbd->setEnabled(t);
-    ui->leNomBdd->setEnabled(t);
-    ui->lePassSgbd->setEnabled(t);
-    ui->leUserSgbd->setEnabled(t);
+    ui->gbIntervalle->setEnabled(t);
+    ui->gbSgbd->setEnabled(t);
+    ui->gbVS->setEnabled(t);
+    ui->gbServeur->setEnabled(t);
 
     ui->leSeuilHumI2c->setEnabled(t);
     ui->leSeuilTempI2c->setEnabled(t);
     ui->leSeuilTempSpi->setEnabled(t);
 }
 
+void CIhmAppFormQtCpp::stopAll()
+{
+    m_interLcd->stop();
+    m_interMes->stop();
+    m_interServeur->stop();
+    m_interSgbd->stop();
+    delete m_clientTcp;
+    if (m_thI2c->isRunning()) {
+        m_thI2c->m_fin=true;
+        m_thI2c->wait(TEMPS); // max 3s
+        delete m_thI2c;
+    } // if i2c
+    if (m_thSpi->isRunning()) {
+        m_thSpi->m_fin=true;
+        m_thSpi->wait(TEMPS);
+        delete m_thSpi;
+    } // if spi
+}
+
 void CIhmAppFormQtCpp::on_pbId_clicked()
 {
-
     quint8 id=m_thSpi->getManufacturer();
     ui->teTexte->append(QString::number(id,16));
-/*
-    unsigned char trame[5];
-    int res;
-    trame[0] = 0x03;
-    trame[1] = 0;
-    res = m_tc72->SpiOpenPort(0);
-    if (res<0)
-        emit sigErreur("ERREUR OpenPort SPIioctl");
-    res = m_tc72->SpiWriteAndRead(0, trame, 1);
-    if (res<0)
-        emit sigErreur("ERREUR WriteAndRead SPIioctl");
-    ui->teTexte->append(QString::number(trame[0],16));
-    */
 }
 
 void CIhmAppFormQtCpp::on_pbLcd_clicked()
@@ -300,4 +262,9 @@ void CIhmAppFormQtCpp::affLibre()
 {
     m_affLibre = true;
     delete thAff;
+}
+
+void CIhmAppFormQtCpp::on_recevoirDataDuPeriph(QString data)
+{
+    ui->teRecevoir->append(data);
 }

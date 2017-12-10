@@ -1,9 +1,7 @@
 #include "cperiphrs232.h"
 
-CPeriphRs232::CPeriphRs232(QObject *parent, QString port, int inter) :
-    QThread(parent)
+CPeriphRs232::CPeriphRs232(QObject *parent, QString nomPort)
 {
-    mIntervale = inter;
     // initialisation de la mémoire partagée
     mShm = new QSharedMemory(KEY,this);
     mShm->attach();   // tentative de s'attacher
@@ -12,25 +10,37 @@ CPeriphRs232::CPeriphRs232(QObject *parent, QString port, int inter) :
         emit sigErreur(mess);
       return;
     } // if isattached
+    rs = new CRs232c(this, "/dev"+nomPort);
+    connect(rs, SIGNAL(sigData(QByteArray)), this, SLOT(onData(QByteArray)));
     qDebug() << "Objet CPeriphRs232 créé !";
 }
 
 CPeriphRs232::~CPeriphRs232()
 {
+    delete rs;
     mShm->detach();
     delete mShm;
     qDebug() << "Objet CPeriphRs232 détruit !";
-
 }
 
-void CPeriphRs232::run()
+QStringList CPeriphRs232::portsDisponibles()
 {
-    while(1) {
-
-    } // wh
+    QStringList stringList;
+    QList<QSerialPortInfo> spi;
+    spi = QSerialPortInfo::availablePorts();
+    for (int i=0 ; i<spi.size() ; i++) {
+        QString str = spi.at(i).portName();
+        stringList.append(str);
+    } // for
+    return stringList;
 }
 
 void CPeriphRs232::onErreur(QString mess)
 {
     emit sigErreur(mess);
+}
+
+void CPeriphRs232::onData(QByteArray data)
+{
+    emit sigData(QString(data));
 }

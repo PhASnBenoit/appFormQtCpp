@@ -204,10 +204,10 @@ void CAff_i2c_GroveLcdRgb::afficherMesures(float tempTc72, float tempSht20, floa
     if (seuil) noC=1;
     setColor(noC);
     setCursor(0,0);
-    ecrire("T:"+QString::number(tempSht20,'f',1)+
-           "dC H:"+QString::number(humSht20,'f',0)+"%RH ");
+    ecrire("I2C: "+QString::number(tempSht20,'f',0)+
+           "dC "+QString::number(humSht20,'f',0)+"%");
     setCursor(0,1);
-    ecrire("SPI T:"+QString::number(tempTc72,'f',1)+"dC ");
+    ecrire("SPI: "+QString::number(tempTc72,'f',0)+"dC");
 }
 
 void CAff_i2c_GroveLcdRgb::sequenceBienvenue()

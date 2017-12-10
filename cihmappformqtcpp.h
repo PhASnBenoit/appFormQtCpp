@@ -5,7 +5,7 @@
 #include <QSqlDatabase>
 #include <QMessageBox>
 #include <QTimer>
-#include <QSharedMemory>
+//#include <QSharedMemory>
 #include "cled.h"
 #include "cboutonpoussoir.h"
 #include "cperiphrs232.h"
@@ -15,7 +15,8 @@
 #include "caff_i2c_grovelcdrgb.h"
 #include "cclienttcp.h"
 #include "global.h"
-//#include "cspiioctl.h"
+
+#define TEMPS 3000
 
 namespace Ui {
 class CIhmAppFormQtCpp;
@@ -37,36 +38,36 @@ private slots:
     void on_timerMes();
     void on_timerSgbd();
     void on_timerServeur();
-    void on_timerPeriph();
     void on_timerLcd();
     void on_pbId_clicked();
     void on_pbLcd_clicked();
     void affLibre();
+    void on_recevoirDataDuPeriph(QString data);
 
 signals :
     void sigErreur(QString mess);
 
 private:
     Ui::CIhmAppFormQtCpp *ui;
-    QSqlDatabase m_bdd;
-    CSharedMemory *m_shm;
-    CLed *m_led;
-    CBoutonPoussoir *m_thBt;
-//    CSpiIoctl *m_tc72;
-    CAff_i2c_GroveLcdRgb *m_aff;
-    CPeriphRs232 *m_thPeriph;
-    CCapteur_I2c_SHT20 *m_thI2c;
-    CCapteur_Spi_TC72 *m_thSpi;
-    CClientTcp *m_clientTcp;
-    QTimer *m_interServeur;
-    QTimer *m_interSgbd;
-    QTimer *m_interMes;
-    QTimer *m_interPeriph;
-    QTimer *m_interLcd;
-    bool m_affLibre;
-    QThread *thAff;
-    bool m_seuil;
+    QSqlDatabase m_bdd;  // objet statique vers base de données
+    CSharedMemory *m_shm;   // pointeur vers objet mémoire partagée
+    CLed *m_led;  // pointeur vers objet LED
+    CBoutonPoussoir *m_thBt; // pointeur vers objet bouton poussoir
+    CAff_i2c_GroveLcdRgb *m_aff;  // pointeur vers objet écran I2C LCD
+    CPeriphRs232 *m_periph;  // pointeur vers objet écran RS232C
+    CCapteur_I2c_SHT20 *m_thI2c;  // pointeur vers thread objet I2C SHT20
+    CCapteur_Spi_TC72 *m_thSpi;  // pointeur vers thread objet SPI TC72
+    CClientTcp *m_clientTcp;   // pointeur vers objet client TCP
+    QTimer *m_interServeur; // pointeur vers objet timer envoi au serveur TCP
+    QTimer *m_interSgbd;  // pointeur timer envoi vers SGBD
+    QTimer *m_interMes;  // pointeur timer affichage mesures IHM
+    QTimer *m_interLcd;  // pointeur timer envoi vers ecran LCD
+    bool m_affLibre;   // état pour gestion écran LCD
+    bool m_seuil;  // etat alarme ou non pour couleur écran
+    QThread *thAff;  // pointeur objet thread affichage bienvenue ecran LCD
+
     void setIhm(bool t);
+    void stopAll();
 };
 
 #endif // CIHMAPPFORMQTCPP_H

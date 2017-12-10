@@ -12,7 +12,7 @@ CCapteur_Spi_TC72::CCapteur_Spi_TC72(QObject *parent, int ce, int noMes) :
     connect(m_shm, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     m_shm->attacherSeulement();
 
-    m_spi = new CSpi(this, m_ce, 1000000, true);
+    m_spi = new CSpi(this, m_ce, 5000000, true);
     connect(m_spi, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     reset();  // reset soft du capteur
     setMode(m_etat);  // mode eco par défaut

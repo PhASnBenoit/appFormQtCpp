@@ -1,30 +1,35 @@
 #ifndef CPERIPHRS232_H
 #define CPERIPHRS232_H
 
-#include <QThread>
+
+#include <QObject>
 #include <QDebug>
 #include <QSerialPort>  // ne pas oublier d'ajouter QT+=serialport dans .pro
+#include <QSerialPortInfo>
 #include <QSharedMemory>
 #include "global.h"
+#include "/home/pi/devQt/biblis/crs232c.h"
 
-class CPeriphRs232 : public QThread
+class CPeriphRs232: public QObject
 {
     Q_OBJECT
+
 public:
-    explicit CPeriphRs232(QObject *parent = 0, QString port = "/dev/USB0", int inter = 10000);
+    explicit CPeriphRs232(QObject *parent = 0, QString nomPort = "ttyUSB0");
     ~CPeriphRs232();
+    static QStringList portsDisponibles();
 
 private:
-    int mIntervale;
     QSharedMemory *mShm;
-    void run();
+    CRs232c *rs;
 
 signals:
     void sigErreur(QString mess);
+    void sigData(QString data);
 
 private slots:
     void onErreur(QString mess);
-
+    void onData(QByteArray data);
 };
 
 #endif // CPERIPHRS232_H
