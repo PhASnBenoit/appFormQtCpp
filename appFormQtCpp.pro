@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     caff_i2c_grovelcdrgb.cpp \
     cclienttcp.cpp \
     cclientsgbd.cpp \
-    ../biblis/crs232c.cpp
+    ../biblis/crs232c.cpp \
+    cbdd.cpp
 
 HEADERS  += \
     cled.h \
@@ -43,7 +44,8 @@ HEADERS  += \
     caff_i2c_grovelcdrgb.h \
     cclienttcp.h \
     cclientsgbd.h \
-    ../biblis/crs232c.h
+    ../biblis/crs232c.h \
+    cbdd.h
 
 FORMS    += \
     cihmappformqtcpp.ui

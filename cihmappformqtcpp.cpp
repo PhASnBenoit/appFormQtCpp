@@ -14,10 +14,9 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     m_seuil=false;   // dépassement seuil mesure
 
     // BDD
-    m_bdd = QSqlDatabase::addDatabase("QMYSQL");
-    if (!m_bdd.isValid()) {
-        emit sigErreur("CIhmAppFormQtCpp::CIhmAppFormQtCpp Driver BDD non reconnu !");
-    } // if bdd
+    m_bdd = new CBdd(this);
+    connect(m_bdd, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+    m_bdd->connecter(ui->leAdrSgbd->text(), ui->leNomBdd->text(), ui->leNomBdd->text(), ui->lePassSgbd->text());
 
     // initialisation de la mémoire partagée
     m_shm = new CSharedMemory(this, NBMESURES*sizeof(float));
@@ -71,6 +70,7 @@ CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
     // détruit les objets
     delete m_led;
     delete m_aff;
+    delete m_bdd;
     if (m_thBt->isRunning()) {
         m_thBt->m_fin=true;
         m_thBt->wait(TEMPS);
@@ -185,7 +185,8 @@ void CIhmAppFormQtCpp::on_timerMes()
 
 void CIhmAppFormQtCpp::on_timerSgbd()
 {
-
+    for(int i=0 ; i<NBMESURES ; i++)
+        m_bdd->sauverMesure(i, m_shm->lire(i));
 }
 
 void CIhmAppFormQtCpp::on_timerServeur()
@@ -249,7 +250,7 @@ void CIhmAppFormQtCpp::on_pbLcd_clicked()
         connect(thAff, SIGNAL(started()), m_aff, SLOT(sequenceBienvenue()));
         connect(m_aff, SIGNAL(workFinished()), thAff, SLOT(quit()));
         connect(thAff, SIGNAL(finished()), thAff, SLOT(deleteLater()));
-        connect(thAff, SIGNAL(finished()), this, SLOT(affLibre()));
+        connect(thAff, SIGNAL(finished()), this, SLOT(onFinished()));
         if (m_interLcd->isActive()) {
             m_interLcd->stop();
             connect(thAff, SIGNAL(finished()), m_interLcd, SLOT(start()));
@@ -258,7 +259,7 @@ void CIhmAppFormQtCpp::on_pbLcd_clicked()
     } // if libre
 }
 
-void CIhmAppFormQtCpp::affLibre()
+void CIhmAppFormQtCpp::onFinished()
 {
     m_affLibre = true;
     delete thAff;

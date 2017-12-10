@@ -2,10 +2,8 @@
 #define CIHMAPPFORMQTCPP_H
 
 #include <QMainWindow>
-#include <QSqlDatabase>
-#include <QMessageBox>
 #include <QTimer>
-//#include <QSharedMemory>
+#include "cbdd.h"
 #include "cled.h"
 #include "cboutonpoussoir.h"
 #include "cperiphrs232.h"
@@ -41,7 +39,7 @@ private slots:
     void on_timerLcd();
     void on_pbId_clicked();
     void on_pbLcd_clicked();
-    void affLibre();
+    void onFinished();
     void on_recevoirDataDuPeriph(QString data);
 
 signals :
@@ -49,7 +47,7 @@ signals :
 
 private:
     Ui::CIhmAppFormQtCpp *ui;
-    QSqlDatabase m_bdd;  // objet statique vers base de données
+    CBdd *m_bdd;  // objet statique vers base de données
     CSharedMemory *m_shm;   // pointeur vers objet mémoire partagée
     CLed *m_led;  // pointeur vers objet LED
     CBoutonPoussoir *m_thBt; // pointeur vers objet bouton poussoir
