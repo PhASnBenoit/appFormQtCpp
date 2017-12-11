@@ -29,16 +29,18 @@ public:
 
 private slots:
     void on_pbStartStop_clicked();
+    void on_pbOnOffLed_clicked();
+    void on_pbLcd_clicked();
     void on_Erreur(QString mess);
     void on_etatBouton(bool etat);
-    void on_pbOnOffLed_clicked();
     void on_timerMes();
     void on_timerSgbd();
     void on_timerServeur();
     void on_timerLcd();
-    void on_pbLcd_clicked();
     void onFinished();
     void on_recevoirDataDuPeriph(QString data);
+
+    void on_pbEnvoyer_clicked();
 
 signals :
     void sigErreur(QString mess);

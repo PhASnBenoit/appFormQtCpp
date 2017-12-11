@@ -45,20 +45,24 @@ void CServeurTcp::onNewConnection()
     connect(m_soc, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     QString mess="Serveur de mesures : tapez un chiffre de 0 à 2 :";
     m_soc->write(mess.toStdString().c_str(), mess.size());
+    m_soc->write("\x0d\x0a", 2);
 }
 
 void CServeurTcp::onReadyRead()
 {
     QByteArray ba = m_soc->readAll(); // recoit 0 ou 1 ou 2 en ASCII
     if ( (ba.at(0)<'0') || (ba.at(0)>'2') ) {
-        QString mess="Erreur, entrez 0 ou 1 ou 2 :";
+        QString mess=" Erreur, entrez 0 ou 1 ou 2 :";
         m_soc->write(mess.toStdString().c_str(), mess.size());
+        m_soc->write("\x0d\x0a", 2);
     } else {
         float valeur = m_shm->lire(ba.at(0)-0x30);
         QString strVal = QString::number(valeur, 'f', 1);
+        m_soc->write("\x0d\x0a", 2);
         int nb = m_soc->write(strVal.toStdString().c_str(), strVal.size());
         if (nb != strVal.size())
             emit sigErreur("CServeurTcp::onReadyRead ERREUR réponse au client");
+        m_soc->write("\x0d\x0a", 2);
     } // else
 }
 

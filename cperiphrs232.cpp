@@ -13,6 +13,7 @@ CPeriphRs232::CPeriphRs232(QObject *parent, QString nomPort)
     } // if isattached
     rs = new CRs232c(this, "/dev"+nomPort);
     connect(rs, SIGNAL(sigData(QByteArray)), this, SLOT(onData(QByteArray)));
+    connect(rs, SIGNAL(sigErreur(QSerialPort::SerialPortError)), this, SLOT(onErreur(QSerialPort::SerialPortError)));
     qDebug() << "Objet CPeriphRs232 créé !";
 }
 
@@ -36,8 +37,14 @@ QStringList CPeriphRs232::portsDisponibles()
     return stringList;
 }
 
-void CPeriphRs232::onErreur(QString mess)
+int CPeriphRs232::emettre(QString mess)
 {
+    return rs->ecrire(mess.toStdString().c_str(), mess.size());
+}
+
+void CPeriphRs232::onErreur(QSerialPort::SerialPortError err)
+{
+    QString mess="CPeriphRs232::onErreur ERREUR port série "+err;
     emit sigErreur(mess);
 }
 

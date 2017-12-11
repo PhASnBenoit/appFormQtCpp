@@ -18,6 +18,7 @@ public:
     explicit CPeriphRs232(QObject *parent = 0, QString nomPort = "ttyUSB0");
     ~CPeriphRs232();
     static QStringList portsDisponibles();
+    int emettre(QString mess);
 
 private:
     QSharedMemory *mShm;
@@ -29,7 +30,7 @@ signals:
     void sigData(QString data);
 
 private slots:
-    void onErreur(QString mess);
+    void onErreur(QSerialPort::SerialPortError err);
     void onData(QByteArray data);
 };
 

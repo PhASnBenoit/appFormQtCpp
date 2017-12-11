@@ -271,3 +271,8 @@ void CIhmAppFormQtCpp::on_recevoirDataDuPeriph(QString data)
 {
     ui->teRecevoir->append(data);
 }
+
+void CIhmAppFormQtCpp::on_pbEnvoyer_clicked()
+{
+    m_clientTcp->emettre(ui->leEnvoyer->text());
+}
