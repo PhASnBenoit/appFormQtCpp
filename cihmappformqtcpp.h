@@ -12,9 +12,8 @@
 #include "csharedmemory.h"
 #include "caff_i2c_grovelcdrgb.h"
 #include "cclienttcp.h"
+#include "cserveurtcp.h"
 #include "global.h"
-
-#define TEMPS 3000
 
 namespace Ui {
 class CIhmAppFormQtCpp;
@@ -55,12 +54,15 @@ private:
     CCapteur_I2c_SHT20 *m_thI2c;  // pointeur vers thread objet I2C SHT20
     CCapteur_Spi_TC72 *m_thSpi;  // pointeur vers thread objet SPI TC72
     CClientTcp *m_clientTcp;   // pointeur vers objet client TCP
+    CServeurTcp *m_serveurTcp;  // pointeur vers objet serveur TCP
     QTimer *m_interServeur; // pointeur vers objet timer envoi au serveur TCP
     QTimer *m_interSgbd;  // pointeur timer envoi vers SGBD
     QTimer *m_interMes;  // pointeur timer affichage mesures IHM
     QTimer *m_interLcd;  // pointeur timer envoi vers ecran LCD
     bool m_affLibre;   // état pour gestion écran LCD
     bool m_seuil;  // etat alarme ou non pour couleur écran
+    bool m_etatBdd;  // etat BDD si connecté
+    bool m_etatServeur;  // etat si connecté au serveur
     QThread *thAff;  // pointeur objet thread affichage bienvenue ecran LCD
 
     void setIhm(bool t);

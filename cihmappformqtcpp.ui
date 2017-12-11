@@ -231,7 +231,7 @@
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>199</width>
+       <width>131</width>
        <height>48</height>
       </rect>
      </property>
@@ -242,11 +242,14 @@
     <widget class="QLabel" name="laNoir">
      <property name="geometry">
       <rect>
-       <x>230</x>
+       <x>170</x>
        <y>40</y>
        <width>51</width>
        <height>51</height>
       </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
      </property>
      <property name="text">
       <string/>
@@ -267,19 +270,22 @@
        <height>51</height>
       </rect>
      </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
      <property name="text">
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>rouge.png</pixmap>
+      <pixmap>feux-feurouge.jpg</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
      </property>
     </widget>
     <zorder>laRouge</zorder>
-    <zorder>pbOnOffLed</zorder>
     <zorder>laNoir</zorder>
+    <zorder>pbOnOffLed</zorder>
    </widget>
    <widget class="QTextEdit" name="teTexte">
     <property name="geometry">

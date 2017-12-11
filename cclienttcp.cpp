@@ -30,9 +30,10 @@ int CClientTcp::emettre(QString mess)
 int CClientTcp::connecter(QString adr, QString port)
 {
     sock->connectToHost(adr, port.toUShort(), QIODevice::ReadWrite);
-    if (!sock->isOpen())
+    bool res = sock->isOpen();
+    if (!res)
         qDebug() << "CClientTcp::connecter Erreur";
-    return 1;
+    return res;
 }
 
 void CClientTcp::deconnecter()

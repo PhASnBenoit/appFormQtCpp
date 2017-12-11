@@ -16,7 +16,7 @@ public:
     int switchOff();
 
 private:
-    CGpio *gpio;
+    CGpio *m_gpio;
 
 signals:
     void sigErreur(QString mess);

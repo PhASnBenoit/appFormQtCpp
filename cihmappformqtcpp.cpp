@@ -11,12 +11,13 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     ui->cbPorts->addItems(CPeriphRs232::portsDisponibles());
     // états
     m_affLibre=true;
+    m_etatServeur=false;
     m_seuil=false;   // dépassement seuil mesure
 
     // BDD
     m_bdd = new CBdd(this);
     connect(m_bdd, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-    m_bdd->connecter(ui->leAdrSgbd->text(), ui->leNomBdd->text(), ui->leNomBdd->text(), ui->lePassSgbd->text());
+    m_etatBdd = m_bdd->connecter(ui->leAdrSgbd->text(), ui->leNomBdd->text(), ui->leNomBdd->text(), ui->lePassSgbd->text());
 
     // initialisation de la mémoire partagée
     m_shm = new CSharedMemory(this, NBMESURES*sizeof(float));
@@ -43,6 +44,7 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     m_thI2c = NULL;
     m_thSpi = NULL;
     m_clientTcp = NULL;
+    m_serveurTcp = NULL;
 
     // init timer envoi mesures vers serveur TCP
     m_interServeur = new QTimer(this);
@@ -97,11 +99,16 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        setIhm(false);
        ui->pbStartStop->setText("Stop acquisitions");
 
+       // instanciation du serveur TCP
+       m_serveurTcp = new CServeurTcp(this);
+       connect(m_serveurTcp, SIGNAL(sigEvenement(QString)), this, SLOT(on_Erreur(QString)));
+       connect(m_serveurTcp, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+
        // connexion au serveur réseau
        m_clientTcp = new CClientTcp(this);
        connect(m_clientTcp, SIGNAL(sigEvenement(QString)), this, SLOT(on_Erreur(QString)));
        connect(m_clientTcp, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-       m_clientTcp->connecter(ui->leAdrServ->text(), ui->lePortServ->text());
+       m_etatServeur = m_clientTcp->connecter(ui->leAdrServ->text(), ui->lePortServ->text());
 
        // lance les thread capteurs
        m_thI2c = new CCapteur_I2c_SHT20(this,1);
@@ -177,17 +184,21 @@ void CIhmAppFormQtCpp::on_timerMes()
 
 void CIhmAppFormQtCpp::on_timerSgbd()
 {
-    for(int i=0 ; i<NBMESURES ; i++)
-        m_bdd->sauverMesure(i, m_shm->lire(i));
+    if (m_etatBdd) {
+        for(int i=0 ; i<NBMESURES ; i++)
+            m_bdd->sauverMesure(i, m_shm->lire(i));
+    } // if
 }
 
 void CIhmAppFormQtCpp::on_timerServeur()
 {
-    QString mesI2c = "SHC20 Temp:"+QString::number(m_shm->lire(1),'f',1)+"°C"+
-            " Hum:"+QString::number(m_shm->lire(2),'f',1);
-    m_clientTcp->emettre(mesI2c);
-    QString mesSpi = "TC72 Temp:"+QString::number(m_shm->lire(0),'f',1)+"°C";
-    m_clientTcp->emettre(mesSpi);
+    if (m_etatServeur) {
+        QString mesI2c = "SHC20 Temp:"+QString::number(m_shm->lire(1),'f',1)+"°C"+
+                " Hum:"+QString::number(m_shm->lire(2),'f',1);
+        m_clientTcp->emettre(mesI2c);
+        QString mesSpi = "TC72 Temp:"+QString::number(m_shm->lire(0),'f',1)+"°C";
+        m_clientTcp->emettre(mesSpi);
+    } // if
 }
 
 void CIhmAppFormQtCpp::on_timerLcd()
@@ -202,9 +213,6 @@ void CIhmAppFormQtCpp::setIhm(bool t)
     ui->gbSgbd->setEnabled(t);
     ui->gbVS->setEnabled(t);
     ui->gbServeur->setEnabled(t);
-    ui->leSeuilHumI2c->setEnabled(t);
-    ui->leSeuilTempI2c->setEnabled(t);
-    ui->leSeuilTempSpi->setEnabled(t);
 }
 
 void CIhmAppFormQtCpp::stopAll()
@@ -213,17 +221,25 @@ void CIhmAppFormQtCpp::stopAll()
     m_interMes->stop();
     m_interServeur->stop();
     m_interSgbd->stop();
-    if (m_clientTcp != NULL)
+    if (m_serveurTcp != NULL) {
+        delete m_serveurTcp;
+        m_serveurTcp=NULL;
+    } // if serv
+    if (m_clientTcp != NULL) {
         delete m_clientTcp;
+        m_clientTcp=NULL;
+    } // if client
     if (m_thI2c != NULL) {
         m_thI2c->m_fin=true;
         m_thI2c->wait(TEMPS); // max 3s
         delete m_thI2c;
+        m_thI2c=NULL;
     } // if i2c
     if (m_thSpi != NULL) {
         m_thSpi->m_fin=true;
         m_thSpi->wait(TEMPS);
         delete m_thSpi;
+        m_thSpi=NULL;
     } // if spi
 }
 
