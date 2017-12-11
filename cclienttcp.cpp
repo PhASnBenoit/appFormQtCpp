@@ -13,6 +13,8 @@ CClientTcp::CClientTcp(QObject *parent) :
 
 CClientTcp::~CClientTcp()
 {
+    if (sock->isOpen())
+        sock->close();
     delete sock;
     qDebug() << "Objet CClientTcp détruit !";
 }

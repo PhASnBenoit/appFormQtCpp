@@ -37,7 +37,6 @@ private slots:
     void on_timerSgbd();
     void on_timerServeur();
     void on_timerLcd();
-    void on_pbId_clicked();
     void on_pbLcd_clicked();
     void onFinished();
     void on_recevoirDataDuPeriph(QString data);

@@ -24,10 +24,9 @@ SOURCES += main.cpp\
     ccapteur_spi_tc72.cpp \
     cboutonpoussoir.cpp \
     caff_i2c_grovelcdrgb.cpp \
-    cclienttcp.cpp \
-    cclientsgbd.cpp \
     ../biblis/crs232c.cpp \
-    cbdd.cpp
+    cbdd.cpp \
+    cclienttcp.cpp
 
 HEADERS  += \
     cled.h \
@@ -43,7 +42,6 @@ HEADERS  += \
     cboutonpoussoir.h \
     caff_i2c_grovelcdrgb.h \
     cclienttcp.h \
-    cclientsgbd.h \
     ../biblis/crs232c.h \
     cbdd.h
 

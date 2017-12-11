@@ -42,8 +42,9 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     // init des pointeurs vers capteurs
     m_thI2c = NULL;
     m_thSpi = NULL;
+    m_clientTcp = NULL;
 
-    // init des timers
+    // init timer envoi mesures vers serveur TCP
     m_interServeur = new QTimer(this);
     connect(m_interServeur, SIGNAL(timeout()), this, SLOT(on_timerServeur()));
     // init du timer de récupération des mesures
@@ -52,6 +53,7 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     // init timer affichage LCD
     m_interLcd = new QTimer(this);
     connect(m_interLcd, SIGNAL(timeout()), this, SLOT(on_timerLcd()));
+    // init timer maj de la bdd
     m_interSgbd = new QTimer(this);
     connect(m_interSgbd, SIGNAL(timeout()), this, SLOT(on_timerSgbd()));
 }
@@ -200,7 +202,6 @@ void CIhmAppFormQtCpp::setIhm(bool t)
     ui->gbSgbd->setEnabled(t);
     ui->gbVS->setEnabled(t);
     ui->gbServeur->setEnabled(t);
-
     ui->leSeuilHumI2c->setEnabled(t);
     ui->leSeuilTempI2c->setEnabled(t);
     ui->leSeuilTempSpi->setEnabled(t);
@@ -212,23 +213,18 @@ void CIhmAppFormQtCpp::stopAll()
     m_interMes->stop();
     m_interServeur->stop();
     m_interSgbd->stop();
-    delete m_clientTcp;
-    if (m_thI2c->isRunning()) {
+    if (m_clientTcp != NULL)
+        delete m_clientTcp;
+    if (m_thI2c != NULL) {
         m_thI2c->m_fin=true;
         m_thI2c->wait(TEMPS); // max 3s
         delete m_thI2c;
     } // if i2c
-    if (m_thSpi->isRunning()) {
+    if (m_thSpi != NULL) {
         m_thSpi->m_fin=true;
         m_thSpi->wait(TEMPS);
         delete m_thSpi;
     } // if spi
-}
-
-void CIhmAppFormQtCpp::on_pbId_clicked()
-{
-    quint8 id=m_thSpi->getManufacturer();
-    ui->teTexte->append(QString::number(id,16));
 }
 
 void CIhmAppFormQtCpp::on_pbLcd_clicked()

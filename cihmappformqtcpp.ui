@@ -446,19 +446,6 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pbId">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>10</y>
-      <width>91</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ID TC72</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="gbLcd">
     <property name="geometry">
      <rect>

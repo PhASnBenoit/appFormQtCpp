@@ -6,6 +6,7 @@ CAff_i2c_GroveLcdRgb::CAff_i2c_GroveLcdRgb()
     connect(m_i2c, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
     clear();
     setColorOff();
+    qDebug() << "Objet CAff_i2c_GroveLcdRgb est créé !";
 }
 
 CAff_i2c_GroveLcdRgb::~CAff_i2c_GroveLcdRgb()
