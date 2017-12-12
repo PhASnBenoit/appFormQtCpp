@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QPixmap>
 #include "cbdd.h"
 #include "cled.h"
 #include "cboutonpoussoir.h"

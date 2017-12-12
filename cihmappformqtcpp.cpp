@@ -7,8 +7,13 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(this, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-    setIhm(true);
-    ui->cbPorts->addItems(CPeriphRs232::portsDisponibles());
+    setIhm(true); // autorise paramétrage
+    ui->laNoir->setPixmap(QPixmap("./noir.gif"));
+    ui->laNoir->setVisible(true);
+    ui->laRouge->setPixmap(QPixmap("./rouge.png"));
+    ui->laRouge->setVisible(false);
+    ui->cbPorts->addItems(CPeriphRs232::portsDisponibles());  // affichage des ports disponibles
+
     // états
     m_affLibre=true;
     m_etatServeur=false;
@@ -108,6 +113,7 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        m_clientTcp = new CClientTcp(this);
        connect(m_clientTcp, SIGNAL(sigEvenement(QString)), this, SLOT(on_Erreur(QString)));
        connect(m_clientTcp, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       connect(m_clientTcp, SIGNAL(sigData(QString)), this, SLOT(on_Erreur(QString)));
        m_etatServeur = m_clientTcp->connecter(ui->leAdrServ->text(), ui->lePortServ->text());
 
        // lance les thread capteurs
@@ -172,14 +178,37 @@ void CIhmAppFormQtCpp::on_pbOnOffLed_clicked()
 
 void CIhmAppFormQtCpp::on_timerMes()
 {
+    int noMes=0;
     // vérification des seuils
     m_seuil = false;
-    if (m_shm->lire(2) > ui->leSeuilHumI2c->text().toFloat()) m_seuil=true;
-    if (m_shm->lire(1) > ui->leSeuilTempI2c->text().toFloat()) m_seuil=true;
-    if (m_shm->lire(0) > ui->leSeuilTempSpi->text().toFloat()) m_seuil=true;
+    if (m_shm->lire(0) > ui->leSeuilTempSpi->text().toFloat()) {m_seuil=true;noMes+=1;}
+    if (m_shm->lire(1) > ui->leSeuilTempI2c->text().toFloat()) {m_seuil=true;noMes+=2;}
+    if (m_shm->lire(2) > ui->leSeuilHumI2c->text().toFloat()) {m_seuil=true;noMes+=4;}
     ui->leTempSpi->setText(QString::number(m_shm->lire(0),'f',1));  // temp spi
     ui->leTempI2c->setText(QString::number(m_shm->lire(1),'f',1));  // temp i2c
     ui->leHumI2c->setText(QString::number(m_shm->lire(2),'f',1));  // hum i2c
+    if (m_seuil) {
+        m_led->switchOn();
+        ui->laNoir->setVisible(false);
+        ui->laRouge->setVisible(true);
+        ui->pbOnOffLed->setEnabled(false);
+        if ((noMes&0x01)==1) ui->leTempSpi->setStyleSheet("background: red");
+        else ui->leTempSpi->setStyleSheet("background: white");
+        if ((noMes&0x02)==2) ui->leTempI2c->setStyleSheet("background: red");
+        else ui->leTempI2c->setStyleSheet("background: white");
+        if ((noMes&0x04)==4) ui->leHumI2c->setStyleSheet("background: red");
+        else ui->leHumI2c->setStyleSheet("background: white");
+    } else {
+        if (!ui->pbOnOffLed->isEnabled()) {
+            m_led->switchOff();
+            ui->laNoir->setVisible(true);
+            ui->laRouge->setVisible(false);
+            ui->pbOnOffLed->setEnabled(true);
+            ui->leTempSpi->setStyleSheet("background: white");
+            ui->leTempI2c->setStyleSheet("background: white");
+            ui->leHumI2c->setStyleSheet("background: white");
+        } // if enabled
+    } // else
 }
 
 void CIhmAppFormQtCpp::on_timerSgbd()

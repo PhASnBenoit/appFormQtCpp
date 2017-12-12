@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Formation Qt C++ (PhA-2017)</string>
+   <string>Formation Qt C++ (PhA-2017 v1.0)</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="gbCapteurs">
@@ -71,14 +71,14 @@
       <item>
        <widget class="QLineEdit" name="leSeuilTempI2c">
         <property name="text">
-         <string>40</string>
+         <string>37</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLineEdit" name="leSeuilHumI2c">
         <property name="text">
-         <string>30</string>
+         <string>20</string>
         </property>
        </widget>
       </item>
@@ -242,20 +242,17 @@
     <widget class="QLabel" name="laNoir">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>230</x>
        <y>40</y>
        <width>51</width>
        <height>51</height>
       </rect>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
      <property name="text">
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>noir.jpg</pixmap>
+      <pixmap>noir.gif</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -270,14 +267,11 @@
        <height>51</height>
       </rect>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
      <property name="text">
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>feux-feurouge.jpg</pixmap>
+      <pixmap>rouge.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -332,7 +326,7 @@
       <item>
        <widget class="QLineEdit" name="leSeuilTempSpi">
         <property name="text">
-         <string>40</string>
+         <string>36</string>
         </property>
        </widget>
       </item>
@@ -458,7 +452,7 @@
       <x>10</x>
       <y>340</y>
       <width>151</width>
-      <height>151</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
@@ -523,6 +517,19 @@
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="pbEffacer">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>480</y>
+      <width>91</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Effacer</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -1092,5 +1099,22 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pbEffacer</sender>
+   <signal>clicked()</signal>
+   <receiver>teTexte</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>414</x>
+     <y>539</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>409</x>
+     <y>581</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
