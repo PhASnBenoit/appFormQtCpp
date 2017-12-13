@@ -40,7 +40,6 @@ private slots:
     void on_timerLcd();
     void onFinished();
     void on_recevoirDataDuPeriph(QString data);
-
     void on_pbEnvoyer_clicked();
 
 signals :

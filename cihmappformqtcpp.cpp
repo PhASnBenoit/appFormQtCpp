@@ -40,14 +40,10 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     m_aff = new CAff_i2c_GroveLcdRgb();
     connect(m_aff, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
 
-    // instanciation du periphRS232C
-    m_periph = new CPeriphRs232(this, ui->cbPorts->currentText());
-    connect(m_periph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-    connect(m_periph, SIGNAL(sigData(QString)), this, SLOT(on_recevoirDataDuPeriph(QString)));
-
     // init des pointeurs vers capteurs
     m_thI2c = NULL;
     m_thSpi = NULL;
+    m_periph = NULL;
     m_clientTcp = NULL;
     m_serveurTcp = NULL;
 
@@ -104,6 +100,15 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        setIhm(false);
        ui->pbStartStop->setText("Stop acquisitions");
 
+       // instanciation du periphRS232C
+       m_periph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText());
+       connect(m_periph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       connect(m_periph, SIGNAL(sigData(QString)), this, SLOT(on_recevoirDataDuPeriph(QString)));
+       m_periph->initialiser(ui->cbVitesse->currentText(),
+                             ui->cbBits->currentText(),
+                             ui->cbParite->currentText(),
+                             ui->cbStop->currentText(),
+                             NULL);
        // instanciation du serveur TCP
        m_serveurTcp = new CServeurTcp(this);
        connect(m_serveurTcp, SIGNAL(sigEvenement(QString)), this, SLOT(on_Erreur(QString)));
@@ -250,6 +255,10 @@ void CIhmAppFormQtCpp::stopAll()
     m_interMes->stop();
     m_interServeur->stop();
     m_interSgbd->stop();
+    if (m_periph != NULL) {
+        delete m_periph;
+        m_periph=NULL;
+    } // if serv
     if (m_serveurTcp != NULL) {
         delete m_serveurTcp;
         m_serveurTcp=NULL;
@@ -303,5 +312,5 @@ void CIhmAppFormQtCpp::on_recevoirDataDuPeriph(QString data)
 
 void CIhmAppFormQtCpp::on_pbEnvoyer_clicked()
 {
-    m_clientTcp->emettre(ui->leEnvoyer->text());
+    m_periph->emettre(ui->leEnvoyer->text());
 }

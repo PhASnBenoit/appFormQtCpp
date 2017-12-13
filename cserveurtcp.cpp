@@ -16,7 +16,9 @@ CServeurTcp::CServeurTcp(QObject *parent) : QObject(parent)
 }
 
 CServeurTcp::~CServeurTcp() {
-    delete m_soc;
+    m_shm->detach();
+    delete m_shm;
+    delete m_serv;
     qDebug() << "objet CServeurTcp détruit";
 }
 
