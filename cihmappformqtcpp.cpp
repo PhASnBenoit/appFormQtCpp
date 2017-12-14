@@ -19,11 +19,6 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     m_etatServeur=false;
     m_seuil=false;   // dépassement seuil mesure
 
-    // BDD
-    m_bdd = new CBdd(this);
-    connect(m_bdd, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
-    m_etatBdd = m_bdd->connecter(ui->leAdrSgbd->text(), ui->leNomBdd->text(), ui->leNomBdd->text(), ui->lePassSgbd->text());
-
     // initialisation de la mémoire partagée
     m_shm = new CSharedMemory(this, NBMESURES*sizeof(float));
     m_shm->attacherOuCreer();
@@ -46,6 +41,7 @@ CIhmAppFormQtCpp::CIhmAppFormQtCpp(QWidget *parent) :
     m_periph = NULL;
     m_clientTcp = NULL;
     m_serveurTcp = NULL;
+    m_bdd = NULL;
 
     // init timer envoi mesures vers serveur TCP
     m_interServeur = new QTimer(this);
@@ -76,7 +72,6 @@ CIhmAppFormQtCpp::~CIhmAppFormQtCpp()
     // détruit les objets
     delete m_led;
     delete m_aff;
-    delete m_bdd;
     if (m_thBt->isRunning()) {
         m_thBt->m_fin=true;
         m_thBt->wait(TEMPS);
@@ -100,6 +95,11 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
        setIhm(false);
        ui->pbStartStop->setText("Stop acquisitions");
 
+       // instanciation de la BDD
+       m_bdd = new CBdd(this);
+       connect(m_bdd, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
+       m_etatBdd = m_bdd->connecter(ui->leAdrSgbd->text(), ui->leNomBdd->text(), ui->leNomBdd->text(), ui->lePassSgbd->text());
+
        // instanciation du periphRS232C
        m_periph = new CPeriphRs232(this, "/dev/"+ui->cbPorts->currentText());
        connect(m_periph, SIGNAL(sigErreur(QString)), this, SLOT(on_Erreur(QString)));
@@ -109,6 +109,7 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
                              ui->cbParite->currentText(),
                              ui->cbStop->currentText(),
                              NULL);
+
        // instanciation du serveur TCP
        m_serveurTcp = new CServeurTcp(this);
        connect(m_serveurTcp, SIGNAL(sigEvenement(QString)), this, SLOT(on_Erreur(QString)));
@@ -247,14 +248,17 @@ void CIhmAppFormQtCpp::setIhm(bool t)
     ui->gbSgbd->setEnabled(t);
     ui->gbVS->setEnabled(t);
     ui->gbServeur->setEnabled(t);
+    ui->gbEcranRs->setEnabled(!t);
 }
 
 void CIhmAppFormQtCpp::stopAll()
 {
-    m_interLcd->stop();
     m_interMes->stop();
     m_interServeur->stop();
     m_interSgbd->stop();
+    m_interLcd->stop();
+    m_aff->clear();
+    m_aff->setColorOff();
     if (m_periph != NULL) {
         delete m_periph;
         m_periph=NULL;
@@ -279,6 +283,10 @@ void CIhmAppFormQtCpp::stopAll()
         delete m_thSpi;
         m_thSpi=NULL;
     } // if spi
+    if (m_bdd != NULL) {
+        delete m_bdd;
+        m_bdd = NULL;
+    } // if bdd
 }
 
 void CIhmAppFormQtCpp::on_pbLcd_clicked()

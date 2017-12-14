@@ -937,7 +937,7 @@
           <string>999.999.999.999</string>
          </property>
          <property name="text">
-          <string>192.168.1.47</string>
+          <string>192.168.2.151</string>
          </property>
         </widget>
        </item>
@@ -1011,7 +1011,7 @@
           <string>999.999.999.999</string>
          </property>
          <property name="text">
-          <string>192.168.1.47</string>
+          <string>192.168.2.151</string>
          </property>
         </widget>
        </item>
