@@ -4,6 +4,7 @@ CAff_i2c_GroveLcdRgb::CAff_i2c_GroveLcdRgb()
 {
     m_i2c = CI2c::getInstance(this, '1'); // new objet de la classe Ci2c
     connect(m_i2c, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
+    begin(16,2);
     clear();
     setColorOff();
     qDebug() << "Objet CAff_i2c_GroveLcdRgb est créé !";

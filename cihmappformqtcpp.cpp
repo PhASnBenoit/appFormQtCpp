@@ -293,24 +293,24 @@ void CIhmAppFormQtCpp::on_pbLcd_clicked()
 {
     if (m_affLibre) {
         m_affLibre = false;
-        thAff = new QThread();
-        m_aff->moveToThread(thAff);
-        connect(thAff, SIGNAL(started()), m_aff, SLOT(sequenceBienvenue()));
-        connect(m_aff, SIGNAL(workFinished()), thAff, SLOT(quit()));
-        connect(thAff, SIGNAL(finished()), thAff, SLOT(deleteLater()));
-        connect(thAff, SIGNAL(finished()), this, SLOT(onFinished()));
+        m_thAff = new QThread();
+        m_aff->moveToThread(m_thAff);
+        connect(m_thAff, SIGNAL(started()), m_aff, SLOT(sequenceBienvenue()));
+        connect(m_aff, SIGNAL(sigWorkFinished()), m_thAff, SLOT(quit()));
+        connect(m_thAff, SIGNAL(finished()), m_thAff, SLOT(deleteLater()));
+        connect(m_thAff, SIGNAL(finished()), this, SLOT(onFinished()));
         if (m_interLcd->isActive()) {
             m_interLcd->stop();
-            connect(thAff, SIGNAL(finished()), m_interLcd, SLOT(start()));
+            connect(m_thAff, SIGNAL(finished()), m_interLcd, SLOT(start()));
         } // if isactive
-        thAff->start();
+        m_thAff->start();
     } // if libre
 }
 
 void CIhmAppFormQtCpp::onFinished()
 {
     m_affLibre = true;
-    delete thAff;
+    delete m_thAff;
 }
 
 void CIhmAppFormQtCpp::on_recevoirDataDuPeriph(QString data)

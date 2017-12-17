@@ -65,7 +65,7 @@ private:
     bool m_seuil;  // etat alarme ou non pour couleur écran
     bool m_etatBdd;  // etat BDD si connecté
     bool m_etatServeur;  // etat si connecté au serveur
-    QThread *thAff;  // pointeur objet thread affichage bienvenue ecran LCD
+    QThread *m_thAff;  // pointeur objet thread affichage bienvenue ecran LCD
 
     void setIhm(bool t);
     void stopAll();
