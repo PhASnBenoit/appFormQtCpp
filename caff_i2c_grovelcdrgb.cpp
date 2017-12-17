@@ -231,7 +231,7 @@ void CAff_i2c_GroveLcdRgb::sequenceBienvenue()
        scrollDisplayRight();
     begin(16,2);
     setRGB(0,0,0);
-    emit workFinished();
+    emit sigWorkFinished();
 }
 
 // send data

@@ -13,7 +13,7 @@ public:
     bool m_fin;
 
 private:
-    CGpio *gpio;
+    CGpio *m_gpio;
     void run();
     int m_valMem;  // état mémoire
 

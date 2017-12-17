@@ -90,14 +90,12 @@ public:
     int ecrire(QString text);
     void command(int);
     void afficherMesures(float tempTc72, float tempSht20, float humSht20, bool seuil);
-
     // color control
     void setRGB(unsigned char r, unsigned char g, unsigned char b);               // set rgb
     void setPWM(unsigned char color, unsigned char pwm){setReg(color, pwm);}      // set pwm
     void setColor(unsigned char color);
     void setColorOff(){setRGB(0, 0, 0);}
     void setColorWhite(){setRGB(255, 255, 255);}
-
     // blink the LED backlight
     void blinkLED(void);
     void noBlinkLED(void);
@@ -115,7 +113,7 @@ public:
 
 signals:
     void sigErreur(QString mess);
-    void workFinished();
+    void sigWorkFinished();
 
 private slots:
     void onErreur(QString mess);

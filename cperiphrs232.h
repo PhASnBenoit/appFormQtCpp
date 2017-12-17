@@ -23,7 +23,7 @@ public:
                     QString flow);
 
 private:
-    CRs232c *rs;
+    CRs232c *m_rs;
     QObject *m_parent;
 
 signals:

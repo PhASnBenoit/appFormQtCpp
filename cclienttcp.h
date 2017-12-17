@@ -20,14 +20,14 @@ signals:
     void sigErreur(QString mess);
     void sigEvenement(QString eve);
 
-public slots:
+private slots:
     void onConnected();
     void onDisconnected();
     void onReadyRead();
     void onSocketError(QAbstractSocket::SocketError);
 
 private:
-    QTcpSocket *sock;
+    QTcpSocket *m_sock;
 };
 
 #endif // CCLIENTTCP_H

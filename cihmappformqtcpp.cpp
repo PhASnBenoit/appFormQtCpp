@@ -108,7 +108,7 @@ void CIhmAppFormQtCpp::on_pbStartStop_clicked()
                              ui->cbBits->currentText(),
                              ui->cbParite->currentText(),
                              ui->cbStop->currentText(),
-                             NULL);
+                             QString::number(QSerialPort::NoFlowControl));
 
        // instanciation du serveur TCP
        m_serveurTcp = new CServeurTcp(this);
