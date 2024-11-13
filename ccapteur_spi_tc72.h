@@ -19,24 +19,23 @@ typedef enum {
     ONESHOT=0x11
 } T_ETAT;
 
-class CCapteur_Spi_TC72 : public QThread
+class CCapteur_Spi_TC72 : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit CCapteur_Spi_TC72(QObject *parent = 0, int ce = 0, int noMes = 0);
+    explicit CCapteur_Spi_TC72(QObject *parent = nullptr, int ce = 0, int noMes = 0);
     ~CCapteur_Spi_TC72();
-    bool m_fin;
+    bool _fin;
     quint8 getManufacturer();
 
 private:
     CSharedMemory *m_shm;
-    CSpi *m_spi;
-    int m_ce;
-    int m_noMes;
-    T_ETAT m_etat;   // état du capteur
+    CSpi *_spi;
+    int _ce;
+    int _noMes;
+    T_ETAT _etat;   // état du capteur
 
-    void run();  // thread méthode redéfinie
     int setMode(T_ETAT etat); // continous ou oneshot
     int reset();
     float getTemperature();
@@ -44,10 +43,13 @@ private:
     int setControleRegister(quint8 val);
 
 signals:
-    void sigErreur(QString mess);
+    void sig_erreur(QString mess);
+
+public slots:
+    void on_go();  // thread méthode redéfinie
 
 private slots:
-    void onErreur(QString mess);
+    void on_erreur(QString mess);
 
 };
 

@@ -2,9 +2,10 @@
 
 CBdd::CBdd(QObject *parent) : QObject(parent)
 {
-    m_bdd = QSqlDatabase::addDatabase("QMYSQL");
-    if (!m_bdd.isValid()) {
-        emit sigErreur("CBdd::CBdd Driver BDD non reconnu !");
+    _bdd = QSqlDatabase::addDatabase("QMYSQL");
+    if (!_bdd.isValid()) {
+        emit sig_erreur("CBdd::CBdd Driver BDD non reconnu !");
+        qDebug() << "Objet CBdd driver non reconnu !";
     } // if bdd
     qDebug() << "Objet CBdd créé !";
 }
@@ -20,17 +21,17 @@ int CBdd::sauverMesure(int no, float valeur)
 
 int CBdd::connecter(QString adr, QString NomBdd, QString nomUser, QString mdp)
 {
-    m_bdd.setHostName(adr);
-    m_bdd.setDatabaseName(NomBdd);
-    m_bdd.setUserName(nomUser);
-    m_bdd.setPassword(mdp);
-    bool ok = m_bdd.open();
+    _bdd.setHostName(adr);
+    _bdd.setDatabaseName(NomBdd);
+    _bdd.setUserName(nomUser);
+    _bdd.setPassword(mdp);
+    bool ok = _bdd.open();
     if (!ok)
-        emit sigErreur("CBdd::connecter Impossible d'ouvrir la BDD !");
+        emit sig_erreur("CBdd::connecter Impossible d'ouvrir la BDD !");
     return ok;
 }
 
-void CBdd::onErreur(QString mess)
+void CBdd::on_erreur(QString mess)
 {
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }

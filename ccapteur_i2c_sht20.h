@@ -13,27 +13,29 @@
 #define COM_READ_REG 0xe7
 #define COM_WRITE_REG 0xe6
 
-class CCapteur_I2c_SHT20 : public QThread
+class CCapteur_I2c_SHT20 : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit CCapteur_I2c_SHT20(QObject *parent = 0, int noMesBase = 1);
+    explicit CCapteur_I2c_SHT20(QObject *parent = nullptr, int noMesBase = 1);
     ~CCapteur_I2c_SHT20();
-    bool m_fin;
+    bool _fin;
 
 private:
-    CSharedMemory *m_shm;
-    CI2c *m_i2c;
+    CSharedMemory *_shm;
+    CI2c *_i2c;
     int m_noMesBase;
-    void run();  // méthode virtuelle à implémenter, contenu du thread
     float lireMesureHum();
     float lireMesureTemp();
 signals:
-    void sigErreur(QString mess);
+    void sig_erreur(QString mess);
+
+public slots:
+    void on_go();  // méthode virtuelle à implémenter, contenu du thread
 
 private slots:
-    void onErreur(QString mess);
+    void on_erreur(QString mess);
 
 };
 

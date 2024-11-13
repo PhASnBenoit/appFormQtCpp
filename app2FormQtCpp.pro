@@ -8,16 +8,16 @@ QT       += core gui sql serialport network sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = appFormQtCpp
+TARGET = app2FormQtCpp
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    ../biblis/cgpio2024.cpp \
+    cgui.cpp \
     cled.cpp \
-    cihmappformqtcpp.cpp \
     cperiphrs232.cpp \
     csharedmemory.cpp \
-    ../biblis/cgpio.cpp \
     ../biblis/ci2c.cpp \
     ../biblis/cspi.cpp \
     ccapteur_i2c_sht20.cpp \
@@ -30,12 +30,12 @@ SOURCES += main.cpp\
     cserveurtcp.cpp
 
 HEADERS  += \
+    ../biblis/cgpio2024.h \
+    cgui.h \
     cled.h \
-    cihmappformqtcpp.h \
     cperiphrs232.h \
     global.h \
     csharedmemory.h \
-    ../biblis/cgpio.h \
     ../biblis/ci2c.h \
     ../biblis/cspi.h \
     ccapteur_i2c_sht20.h \
@@ -48,6 +48,6 @@ HEADERS  += \
     cserveurtcp.h
 
 FORMS    += \
-    cihmappformqtcpp.ui
+    cgui.ui
 
 OTHER_FILES +=

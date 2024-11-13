@@ -1,28 +1,31 @@
 #ifndef CBOUTONPOUSSOIR_H
 #define CBOUTONPOUSSOIR_H
 
+#include <QDebug>
 #include <QThread>
-#include "/home/pi/devQt/biblis/cgpio.h"
+#include "/home/pi/devQt/biblis/cgpio2024.h"
 
-class CBoutonPoussoir : public QThread
+class CBoutonPoussoir : public QObject
 {
     Q_OBJECT
 public:
-    explicit CBoutonPoussoir(QObject *parent = 0, int noGpio = 22);
+    explicit CBoutonPoussoir(QObject *parent = nullptr, int noGpio = 22);
     ~CBoutonPoussoir();
-    bool m_fin;
+    bool _fin;
 
 private:
-    CGpio *m_gpio;
-    void run();
-    int m_valMem;  // état mémoire
+    CGpio2024 *_gpio;
+    int _valMem;  // état mémoire
 
 signals:
-    void sigEtatBouton(bool etat);
-    void sigErreur(QString mess);
+    void sig_etatBouton(bool etat);
+    void sig_erreur(QString mess);
+
+public slots:
+    void on_go();
 
 private slots:
-    void onErreur(QString mess);
+    void on_erreur(QString mess);
 
 };
 

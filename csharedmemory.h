@@ -17,7 +17,7 @@ class CSharedMemory : public QSharedMemory
     Q_OBJECT
 
 public:
-    explicit CSharedMemory(QObject *parent = 0, int size = 10);
+    explicit CSharedMemory(QObject *parent = 0, int size = 0);
     ~CSharedMemory();
     int attacherOuCreer();
     int attacherSeulement();
@@ -25,12 +25,12 @@ public:
     float lire(int no);
 
 private:
-    int m_taille;
-    float *m_adrBase;
-    QObject *m_parent;
+    int _taille;
+    float *_adrBase;
+    QObject *_parent;
 
 signals:
-    void sigErreur(QString mess);
+    void sig_erreur(QString mess);
 
 public slots:
 

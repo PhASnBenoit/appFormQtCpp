@@ -23,15 +23,14 @@ private:
     CSharedMemory *m_shm;
 
 signals:
-    void sigErreur(QString mess);
-    void sigEvenement(QString eve);
+    void sig_erreur(QString mess);
+    void sig_evenement(QString eve);
 
 private slots:
-    void onSocketError(QAbstractSocket::SocketError err);
-    void onNewConnection();
-    void onReadyRead();
-    void onErreur(QString mess);
-
+    void on_socketError(QAbstractSocket::SocketError err);
+    void on_newConnection();
+    void on_readyRead();
+    void on_erreur(QString mess);
 };
 
 #endif // CSERVEURTCP_H

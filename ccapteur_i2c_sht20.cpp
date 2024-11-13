@@ -1,15 +1,14 @@
 #include "ccapteur_i2c_sht20.h"
 
-CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent, int noMesBase) :
-    QThread(parent)
+CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent, int noMesBase)
 {
-    m_shm = new CSharedMemory(this);
-    connect(m_shm, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
-    m_shm->attacherSeulement();
+    _shm = new CSharedMemory(this, sizeof(T_SHM_DATA));
+    connect(_shm, SIGNAL(sig_erreur(QString)), this, SLOT(on_erreur(QString)));
+    _shm->attacherSeulement();
 
-    m_i2c = CI2c::getInstance(this, '1');
-    connect(m_i2c, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
-    m_fin=false;
+    _i2c = CI2c::getInstance(this, '1');
+    connect(_i2c, SIGNAL(sig_erreur(QString)), this, SLOT(on_erreur(QString)));
+    _fin=false;
     m_noMesBase = noMesBase;
     qDebug() << "Objet CCapteur_I2c_SHT20 créé !";
 }
@@ -17,32 +16,32 @@ CCapteur_I2c_SHT20::CCapteur_I2c_SHT20(QObject *parent, int noMesBase) :
 CCapteur_I2c_SHT20::~CCapteur_I2c_SHT20()
 {
     CI2c::freeInstance();
-    m_shm->detach();
-    delete m_shm;
+    _shm->detach();
+    delete _shm;
     qDebug() << "Objet CCapteur_I2c_SHT20 détruit !";
 
 }
 
-void CCapteur_I2c_SHT20::run()
+void CCapteur_I2c_SHT20::on_go()
 {
     float mesureHum, mesureTemp;
 
-     while(!m_fin) {
+     while(!_fin) {
          // écriture de la mesure dans le segment de mémoire partagé
          mesureHum = lireMesureHum();
          usleep(100000);
          mesureTemp = lireMesureTemp();
-         m_shm->lock(); // on prend la mémoire partagée
-         m_shm->ecrire(m_noMesBase, mesureTemp);  // écriture dans la mémoire partagée
-         m_shm->ecrire(m_noMesBase+1, mesureHum);  // écriture dans la mémoire partagée
-         m_shm->unlock(); // on libère la mémmoire partagée
+         _shm->lock(); // on prend la mémoire partagée
+             _shm->ecrire(m_noMesBase, mesureTemp);  // écriture dans la mémoire partagée
+             _shm->ecrire(m_noMesBase+1, mesureHum);  // écriture dans la mémoire partagée
+         _shm->unlock(); // on libère la mémmoire partagée
          sleep(1); // lecture toutes les s
      } // while
 }
 
-void CCapteur_I2c_SHT20::onErreur(QString mess)
+void CCapteur_I2c_SHT20::on_erreur(QString mess)
 {
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }
 
 float CCapteur_I2c_SHT20::lireMesureHum()
@@ -53,16 +52,16 @@ float CCapteur_I2c_SHT20::lireMesureHum()
     int res;
 
     ecriture[0] = COM_MES_HUM;
-    m_i2c->ecrire(ADR, ecriture, 1);
+    _i2c->ecrire(ADR, ecriture, 1);
     usleep(100000);
-    res=m_i2c->lire(ADR, lecture, 2);
+    res=_i2c->lire(ADR, lecture, 2);
     if (res != 2) {
         QString mess="CCapteur_I2c_SHT20::lireMesureHum ERREUR Lecture";
-        emit sigErreur(mess);
+        emit sig_erreur(mess);
         return -1;
     } // if res
     unsigned char MSB = lecture[0];
-    unsigned char LSB = lecture[1]&0x03;
+    unsigned char LSB = lecture[1]&0xF0;
     hum=((MSB<<8)+LSB);
     hum = -6+125*hum/65536;
     return hum;
@@ -76,16 +75,16 @@ float CCapteur_I2c_SHT20::lireMesureTemp()
     int res;
 
     ecriture[0] = COM_MES_TEMP;
-    m_i2c->ecrire(ADR, ecriture, 1);
+    _i2c->ecrire(ADR, ecriture, 1);
     usleep(100000);
-    res=m_i2c->lire(ADR, lecture, 2);
+    res=_i2c->lire(ADR, lecture, 2);
     if (res != 2) {
         QString mess="CCapteur_I2c_SHT20::lireMesureTemp ERREUR Lecture";
-        emit sigErreur(mess);
+        emit sig_erreur(mess);
         return -1;
      } // if res
     unsigned char MSB = lecture[0];
-    unsigned char LSB = lecture[1]&0x03;
+    unsigned char LSB = lecture[1]&0xFC;
     temp = ((MSB<<8)+LSB);
     temp = -46.85+175.72*temp/65536;
     return temp;

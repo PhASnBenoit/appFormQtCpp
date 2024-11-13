@@ -1,37 +1,36 @@
 #include "cboutonpoussoir.h"
 
-CBoutonPoussoir::CBoutonPoussoir(QObject *parent, int noGpio) :
-    QThread(parent)
+CBoutonPoussoir::CBoutonPoussoir(QObject *parent, int noGpio)
 {
-    m_gpio = new CGpio(this, noGpio, IN);
-    connect(m_gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
-    m_valMem = false;
-    m_fin=false;
+    _gpio = new CGpio2024(this, noGpio, "gpiochip0");
+    //connect(_gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
+    _valMem = false;
+    _fin=false;
     qDebug() << "Démarrage de l'objet CBoutonPoussoir";
 }
 
 CBoutonPoussoir::~CBoutonPoussoir()
 {
-    delete m_gpio;
+    delete _gpio;
     qDebug() << "Objet CBoutonPoussoir détruit !";
 }
 
-void CBoutonPoussoir::run()
+void CBoutonPoussoir::on_go()
 {
     int etat;
 
-    while(!m_fin) {
-        etat = m_gpio->lire();
-        if (etat != m_valMem) {
-            m_valMem = etat;
-            emit sigEtatBouton(m_valMem);
-//            qDebug() << "etat bouton : " << m_valMem;
+    while(!_fin) {
+        etat = _gpio->getGpio();
+        if (etat != _valMem) {
+            _valMem = etat;
+            emit sig_etatBouton(_valMem);
+            qDebug() << "etat bouton : " << _valMem;
         } // if
-        usleep(50000);
+        QThread::usleep(50000);
     } // wh
 }
 
-void CBoutonPoussoir::onErreur(QString mess)
+void CBoutonPoussoir::on_erreur(QString mess)
 {
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }

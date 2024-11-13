@@ -2,7 +2,10 @@
 #define CLED_H
 
 #include <QObject>
-#include "/home/pi/devQt/biblis/cgpio.h"
+#include <QDebug>
+#include "qdebug.h"
+
+#include "/home/pi/devQt/biblis/cgpio2024.h"
 
 
 class CLed : public QObject
@@ -10,19 +13,19 @@ class CLed : public QObject
     Q_OBJECT
 
 public:
-    explicit CLed(QObject *parent = 0, int noGpio = 4);
+    explicit CLed(QObject *parent = 0, int noGpio = 27);
     ~CLed();
     int switchOn();
     int switchOff();
 
 private:
-    CGpio *m_gpio;
+    CGpio2024 *_gpio27;
 
 signals:
-    void sigErreur(QString mess);
+    void sig_erreur(QString mess);
 
 private slots:
-    void onErreur(QString mess);
+    void on_erreur(QString mess);
 };
 
 #endif // CLED_H

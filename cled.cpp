@@ -2,32 +2,29 @@
 
 CLed::CLed(QObject *parent, int noGpio) : QObject(parent)
 {
-    m_gpio = new CGpio(this, noGpio, OUT);
-    connect(m_gpio, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
+    _gpio27 = new CGpio2024(this, noGpio, "gpiochip0");
     qDebug() << "Objet CLed créé !";
 }
 
 CLed::~CLed()
 {
-    delete m_gpio;
+    delete _gpio27;
     qDebug() << "Objet CLed détruit !";
 }
 
 int CLed::switchOn()
 {
-    int res;
-    res = m_gpio->ecrire(SWITCH_ON);
-    return res;
+    _gpio27->setToOn();
+    return 1;
 }
 
 int CLed::switchOff()
 {
-    int res;
-    res = m_gpio->ecrire(SWITCH_OFF);
-    return res;
+    _gpio27->setToOff();
+    return 0;
 }
 
-void CLed::onErreur(QString mess)
+void CLed::on_erreur(QString mess)
 {
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }

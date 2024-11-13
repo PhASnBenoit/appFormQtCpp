@@ -2,8 +2,8 @@
 
 CAff_i2c_GroveLcdRgb::CAff_i2c_GroveLcdRgb()
 {
-    m_i2c = CI2c::getInstance(this, '1'); // new objet de la classe Ci2c
-    connect(m_i2c, SIGNAL(sigErreur(QString)), this, SLOT(onErreur(QString)));
+    _i2c = CI2c::getInstance(this, '1'); // new objet de la classe Ci2c
+    connect(_i2c, SIGNAL(sig_erreur(QString)), this, SLOT(on_erreur(QString)));
     begin(16,2);
     clear();
     setColorOff();
@@ -22,13 +22,13 @@ void CAff_i2c_GroveLcdRgb::begin(int lines, int dotsize)
 {
 
     if (lines > 1) {
-        m_displayfunction |= LCD_2LINE;
+        _displayfunction |= LCD_2LINE;
     }
-    m_numlines = lines;
-    m_currline = 0;
+    _numlines = lines;
+    _currline = 0;
     // for some 1 line displays you can select a 10 pixel high font
     if ((dotsize != 0) && (lines == 1)) {
-        m_displayfunction |= LCD_5x10DOTS;
+        _displayfunction |= LCD_5x10DOTS;
     }
     // SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
     // according to datasheet, we need at least 40ms after power rises above 2.7V
@@ -37,24 +37,24 @@ void CAff_i2c_GroveLcdRgb::begin(int lines, int dotsize)
     // this is according to the hitachi HD44780 datasheet
     // page 45 figure 23
     // Send function set command sequence
-    command(LCD_FUNCTIONSET | m_displayfunction);
+    command(LCD_FUNCTIONSET | _displayfunction);
     QThread::usleep(4500);  // wait more than 4.1ms
     // second try
-    command(LCD_FUNCTIONSET | m_displayfunction);
+    command(LCD_FUNCTIONSET | _displayfunction);
     QThread::usleep(150);
     // third go
-    command(LCD_FUNCTIONSET | m_displayfunction);
+    command(LCD_FUNCTIONSET | _displayfunction);
     // finally, set # lines, font size, etc.
-    command(LCD_FUNCTIONSET | m_displayfunction);
+    command(LCD_FUNCTIONSET | _displayfunction);
     // turn the display on with no cursor or blinking default
-    m_displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+    _displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
     display();
     // clear it off
     clear();
     // Initialize to default text direction (for romance languages)
-    m_displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
+    _displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
     // set the entry mode
-    command(LCD_ENTRYMODESET | m_displaymode);
+    command(LCD_ENTRYMODESET | _displaymode);
     // backlight init
     setReg(REG_MODE1, 0);
     // set LEDs controllable by both PWM and GRPPWM registers
@@ -82,44 +82,44 @@ void CAff_i2c_GroveLcdRgb::setCursor(int col, int row)
 {
     col = (row==0?col|0x80:col|0xc0);
     unsigned char data[2] = {0x80,(unsigned char)col};
-    m_i2c->ecrire(LCD_ADDRESS, data, 2);
+    _i2c->ecrire(LCD_ADDRESS, data, 2);
     QThread::msleep(200);
 }
 
 // Turn the display on/off (quickly)
 void CAff_i2c_GroveLcdRgb::noDisplay()
 {
-    m_displaycontrol &= ~LCD_DISPLAYON;
-    command(LCD_DISPLAYCONTROL | m_displaycontrol);
+    _displaycontrol &= ~LCD_DISPLAYON;
+    command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 void CAff_i2c_GroveLcdRgb::display() {
-    m_displaycontrol |= LCD_DISPLAYON;
-    command(LCD_DISPLAYCONTROL | m_displaycontrol);
+    _displaycontrol |= LCD_DISPLAYON;
+    command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // Turns the underline cursor on/off
 void CAff_i2c_GroveLcdRgb::noCursor()
 {
-    m_displaycontrol &= ~LCD_CURSORON;
-    command(LCD_DISPLAYCONTROL | m_displaycontrol);
+    _displaycontrol &= ~LCD_CURSORON;
+    command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 void CAff_i2c_GroveLcdRgb::cursor() {
-    m_displaycontrol |= LCD_CURSORON;
-    command(LCD_DISPLAYCONTROL | m_displaycontrol);
+    _displaycontrol |= LCD_CURSORON;
+    command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // Turn on and off the blinking cursor
 void CAff_i2c_GroveLcdRgb::noBlink()
 {
-    m_displaycontrol &= ~LCD_BLINKON;
-    command(LCD_DISPLAYCONTROL | m_displaycontrol);
+    _displaycontrol &= ~LCD_BLINKON;
+    command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 void CAff_i2c_GroveLcdRgb::blink()
 {
-    m_displaycontrol |= LCD_BLINKON;
-    command(LCD_DISPLAYCONTROL | m_displaycontrol);
+    _displaycontrol |= LCD_BLINKON;
+    command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // These commands scroll the display without changing the RAM
@@ -135,29 +135,29 @@ void CAff_i2c_GroveLcdRgb::scrollDisplayRight(void)
 // This is for text that flows Left to Right
 void CAff_i2c_GroveLcdRgb::leftToRight(void)
 {
-    m_displaymode |= LCD_ENTRYLEFT;
-    command(LCD_ENTRYMODESET | m_displaymode);
+    _displaymode |= LCD_ENTRYLEFT;
+    command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This is for text that flows Right to Left
 void CAff_i2c_GroveLcdRgb::rightToLeft(void)
 {
-    m_displaymode &= ~LCD_ENTRYLEFT;
-    command(LCD_ENTRYMODESET | m_displaymode);
+    _displaymode &= ~LCD_ENTRYLEFT;
+    command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This will 'right justify' text from the cursor
 void CAff_i2c_GroveLcdRgb::autoscroll(void)
 {
-    m_displaymode |= LCD_ENTRYSHIFTINCREMENT;
-    command(LCD_ENTRYMODESET | m_displaymode);
+    _displaymode |= LCD_ENTRYSHIFTINCREMENT;
+    command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This will 'left justify' text from the cursor
 void CAff_i2c_GroveLcdRgb::noAutoscroll(void)
 {
-    m_displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
-    command(LCD_ENTRYMODESET | m_displaymode);
+    _displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
+    command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // Allows us to fill the first 8 CGRAM locations
@@ -170,7 +170,7 @@ void CAff_i2c_GroveLcdRgb::createChar(int location, int charmap[])
     data[0] = 0x40;
     for(int i=0; i<8; i++)
         data[i+1] = charmap[i];
-    m_i2c->ecrire(LCD_ADDRESS, data, 9);
+    _i2c->ecrire(LCD_ADDRESS, data, 9);
     QThread::msleep(200);
 }
 
@@ -195,7 +195,7 @@ void CAff_i2c_GroveLcdRgb::noBlinkLED(void)
 inline void CAff_i2c_GroveLcdRgb::command(int value)
 {
     unsigned char data[2] = {0x80, (unsigned char)value};
-    m_i2c->ecrire(LCD_ADDRESS, data, 2);
+    _i2c->ecrire(LCD_ADDRESS, data, 2);
     QThread::msleep(200);
 }
 
@@ -212,7 +212,7 @@ void CAff_i2c_GroveLcdRgb::afficherMesures(float tempTc72, float tempSht20, floa
     ecrire("SPI: "+QString::number(tempTc72,'f',0)+"dC       ");
 }
 
-void CAff_i2c_GroveLcdRgb::sequenceBienvenue()
+void CAff_i2c_GroveLcdRgb::on_sequenceBienvenue()
 {
     begin(16,2);
     setRGB(0,0,255);
@@ -232,7 +232,7 @@ void CAff_i2c_GroveLcdRgb::sequenceBienvenue()
        scrollDisplayRight();
     begin(16,2);
     setRGB(0,0,0);
-    emit sigWorkFinished();
+    emit sig_workFinished();
 }
 
 // send data
@@ -241,7 +241,7 @@ int CAff_i2c_GroveLcdRgb::ecrire(QString text)
     for(int i=0;i<text.length();i++)
     {
        unsigned char data[2] = {0x40, text.at(i).toLatin1()};
-       m_i2c->ecrire(LCD_ADDRESS, data, 2);
+       _i2c->ecrire(LCD_ADDRESS, data, 2);
        QThread::msleep(10);
     }
     return 1; // assume sucess
@@ -252,13 +252,13 @@ void CAff_i2c_GroveLcdRgb::setReg(unsigned char adr, unsigned char data)
     unsigned char buffer[2];
     buffer[0] = adr;
     buffer[1] = data;
-    m_i2c->ecrire(RGB_ADDRESS, buffer, 2);
+    _i2c->ecrire(RGB_ADDRESS, buffer, 2);
     QThread::usleep(200);
 }
 
-void CAff_i2c_GroveLcdRgb::onErreur(QString mess)
+void CAff_i2c_GroveLcdRgb::on_erreur(QString mess)
 {
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }
 
 void CAff_i2c_GroveLcdRgb::setRGB(unsigned char r, unsigned char g, unsigned char b)

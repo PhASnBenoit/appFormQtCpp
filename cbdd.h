@@ -16,13 +16,13 @@ public:
     int connecter(QString adr, QString NomBdd, QString nomUser, QString mdp);
 
 private:
-    QSqlDatabase m_bdd;
+    QSqlDatabase _bdd;
 
 signals:
-    void sigErreur(QString mess);
+    void sig_erreur(QString mess);
 
 private slots:
-    void onErreur(QString mess);
+    void on_erreur(QString mess);
 };
 
 #endif // CBDD_H

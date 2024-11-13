@@ -99,25 +99,27 @@ public:
     // blink the LED backlight
     void blinkLED(void);
     void noBlinkLED(void);
-    CI2c *m_i2c;
+    CI2c *_i2c;
 
   private:
     void send(int, int);
     void setReg(unsigned char adr, unsigned char data);
-    int m_displayfunction;
-    int m_displaycontrol;
-    int m_displaymode;
-    int m_initialized;
-    int m_numlines;
-    int m_currline;
+    int _displayfunction;
+    int _displaycontrol;
+    int _displaymode;
+    int _initialized;
+    int _numlines;
+    int _currline;
 
 signals:
-    void sigErreur(QString mess);
-    void sigWorkFinished();
+    void sig_erreur(QString mess);
+    void sig_workFinished();
+
+public slots:
+    void on_sequenceBienvenue();
 
 private slots:
-    void onErreur(QString mess);
-    void sequenceBienvenue();
+    void on_erreur(QString mess);
 };
 
 #endif // CAFF_I2C_GROVELCDRGB_H

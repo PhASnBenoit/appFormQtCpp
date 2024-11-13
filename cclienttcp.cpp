@@ -3,25 +3,25 @@
 CClientTcp::CClientTcp(QObject *parent) :
     QObject(parent)
 {
-    m_sock = new QTcpSocket(this);
-    connect(m_sock, SIGNAL(connected()), this, SLOT(onConnected()));
-    connect(m_sock, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
-    connect(m_sock, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    connect(m_sock, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
+    _sock = new QTcpSocket(this);
+    connect(_sock, SIGNAL(connected()), this, SLOT(on_connected()));
+    connect(_sock, SIGNAL(disconnected()), this, SLOT(on_disconnected()));
+    connect(_sock, SIGNAL(readyRead()), this, SLOT(on_readyRead()));
+    connect(_sock, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(on_socketError(QAbstractSocket::SocketError)));
     qDebug() << "Objet CClientTcp créé !";
 }
 
 CClientTcp::~CClientTcp()
 {
-    if (m_sock->isOpen())
-        m_sock->close();
-    delete m_sock;
+    if (_sock->isOpen())
+        _sock->close();
+    delete _sock;
     qDebug() << "Objet CClientTcp détruit !";
 }
 
 int CClientTcp::emettre(QString mess)
 {
-    int nb = m_sock->write(mess.toStdString().c_str());
+    int nb = _sock->write(mess.toStdString().c_str());
     if (nb == -1)
         qDebug() << "CClientTcp::emettre Erreur écriture.";
     return nb;
@@ -29,8 +29,8 @@ int CClientTcp::emettre(QString mess)
 
 int CClientTcp::connecter(QString adr, QString port)
 {
-    m_sock->connectToHost(adr, port.toUShort(), QIODevice::ReadWrite);
-    bool res = m_sock->isOpen();
+    _sock->connectToHost(adr, port.toUShort(), QIODevice::ReadWrite);
+    bool res = _sock->isOpen();
     if (!res)
         qDebug() << "CClientTcp::connecter Erreur";
     return res;
@@ -38,35 +38,35 @@ int CClientTcp::connecter(QString adr, QString port)
 
 void CClientTcp::deconnecter()
 {
-    m_sock->close();
+    _sock->close();
 }
 
 /////////////  SLOTs /////////////////////////////////////
 
-void CClientTcp::onConnected()
+void CClientTcp::on_connected()
 {
 //    qDebug() << "Client connecté.";
-    emit sigEvenement("CON"); // communication avec IHM
+    emit sig_evenement("CON"); // communication avec IHM
 }
 
-void CClientTcp::onDisconnected()
+void CClientTcp::on_disconnected()
 {
 //    qDebug() << "Client déconnecté.";
-    emit sigEvenement("DEC"); // communication avec IHM
+    emit sig_evenement("DEC"); // communication avec IHM
 }
 
-void CClientTcp::onReadyRead()
+void CClientTcp::on_readyRead()
 {
     //int nb = m_sock->bytesAvailable();
 //    qDebug() << nb << " octets à lire : ";
 
     QByteArray data;
-    data = m_sock->readAll();
+    data = _sock->readAll();
 //    qDebug() << "CClientTcp::onReadyRead " << data;
-    emit sigData(QString(data));  // transmission à l'IHM par signal
+    emit sig_data(QString(data));  // transmission à l'IHM par signal
 }
 
-void CClientTcp::onSocketError(QAbstractSocket::SocketError err)
+void CClientTcp::on_socketError(QAbstractSocket::SocketError err)
 {
     QString mess="CClientTcp::onSocketError erreur !";
     switch (err) {
@@ -81,5 +81,5 @@ void CClientTcp::onSocketError(QAbstractSocket::SocketError err)
       break;
     } // sw
 //  qDebug() << mess;
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }

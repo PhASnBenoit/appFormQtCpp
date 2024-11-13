@@ -2,16 +2,16 @@
 
 CPeriphRs232::CPeriphRs232(QObject *parent, QString nomPort)
 {
-    m_parent = parent;
-    m_rs = new CRs232c(this, nomPort);
-    connect(m_rs, SIGNAL(sigData(QByteArray)), this, SLOT(onData(QByteArray)));
-    connect(m_rs, SIGNAL(sigErreur(QSerialPort::SerialPortError)), this, SLOT(onErreur(QSerialPort::SerialPortError)));
+    _parent = parent;
+    _rs = new CRs232c(this, nomPort);
+    connect(_rs, SIGNAL(sig_data(QByteArray)), this, SLOT(on_data(QByteArray)));
+    connect(_rs, SIGNAL(sig_erreur(QSerialPort::SerialPortError)), this, SLOT(on_erreur(QSerialPort::SerialPortError)));
     qDebug() << "Objet CPeriphRs232 créé !";
 }
 
 CPeriphRs232::~CPeriphRs232()
 {
-    delete m_rs;
+    delete _rs;
     qDebug() << "Objet CPeriphRs232 détruit !";
 }
 
@@ -29,7 +29,7 @@ QStringList CPeriphRs232::portsDisponibles()
 
 int CPeriphRs232::emettre(QString mess)
 {
-    return m_rs->ecrire(mess.toStdString().c_str(), mess.size());
+    return _rs->ecrire(mess.toStdString().c_str(), mess.size());
 }
 
 int CPeriphRs232::initialiser(QString vitesse, QString data, QString parity, QString nbStop, QString flow)
@@ -43,11 +43,11 @@ int CPeriphRs232::initialiser(QString vitesse, QString data, QString parity, QSt
         par = QSerialPort::EvenParity;
     if (parity == "Impaire")
         par = QSerialPort::OddParity;
-    m_rs->ouvrirPort();
-    return m_rs->initialiser(vit, dat, par, nbS, fl);
+    _rs->ouvrirPort();
+    return _rs->initialiser(vit, dat, par, nbS, fl);
 }
 
-void CPeriphRs232::onErreur(QSerialPort::SerialPortError err)
+void CPeriphRs232::on_erreur(QSerialPort::SerialPortError err)
 {
     QString mess;
     switch (err) {
@@ -63,10 +63,10 @@ void CPeriphRs232::onErreur(QSerialPort::SerialPortError err)
     default:
         mess="CPeriphRs232::onErreur ERREUR non déterminée";
     } // sw
-    emit sigErreur(mess);
+    emit sig_erreur(mess);
 }
 
-void CPeriphRs232::onData(QByteArray data)
+void CPeriphRs232::on_data(QByteArray data)
 {
-    emit sigData(QString(data));
+    emit sig_data(QString(data));
 }

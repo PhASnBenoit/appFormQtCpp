@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CIhmAppFormQtCpp</class>
- <widget class="QMainWindow" name="CIhmAppFormQtCpp">
+ <class>CGui</class>
+ <widget class="QMainWindow" name="CGui">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -538,7 +538,7 @@
      <x>0</x>
      <y>0</y>
      <width>1040</width>
-     <height>26</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
@@ -956,7 +956,7 @@
         <x>10</x>
         <y>30</y>
         <width>121</width>
-        <height>51</height>
+        <height>52</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="vlLServeur">
@@ -1011,7 +1011,7 @@
           <string>999.999.999.999</string>
          </property>
          <property name="text">
-          <string>192.168.2.151</string>
+          <string>192.168.1.31</string>
          </property>
         </widget>
        </item>

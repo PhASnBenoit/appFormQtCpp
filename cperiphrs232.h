@@ -23,16 +23,16 @@ public:
                     QString flow);
 
 private:
-    CRs232c *m_rs;
-    QObject *m_parent;
+    CRs232c *_rs;
+    QObject *_parent;
 
 signals:
-    void sigErreur(QString mess);
-    void sigData(QString data);
+    void sig_erreur(QString mess);
+    void sig_data(QString data);
 
 private slots:
-    void onErreur(QSerialPort::SerialPortError err);
-    void onData(QByteArray data);
+    void on_erreur(QSerialPort::SerialPortError err);
+    void on_data(QByteArray data);
 };
 
 #endif // CPERIPHRS232_H

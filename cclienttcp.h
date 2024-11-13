@@ -16,18 +16,18 @@ public:
     void deconnecter();
 
 signals:
-    void sigData(QString data);
-    void sigErreur(QString mess);
-    void sigEvenement(QString eve);
+    void sig_data(QString data);
+    void sig_erreur(QString mess);
+    void sig_evenement(QString eve);
 
 private slots:
-    void onConnected();
-    void onDisconnected();
-    void onReadyRead();
-    void onSocketError(QAbstractSocket::SocketError);
+    void on_connected();
+    void on_disconnected();
+    void on_readyRead();
+    void on_socketError(QAbstractSocket::SocketError);
 
 private:
-    QTcpSocket *m_sock;
+    QTcpSocket *_sock;
 };
 
 #endif // CCLIENTTCP_H
