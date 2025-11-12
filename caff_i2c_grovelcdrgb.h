@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QThread>
-#include "/home/pi/devQt/biblis/ci2c.h"
+#include "../biblis/ci2c.h"
 
 // Device I2C Arress
 #define LCD_ADDRESS     0x3e

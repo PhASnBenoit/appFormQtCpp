@@ -7,7 +7,7 @@
 #include <QSerialPort>  // ne pas oublier d'ajouter QT+=serialport dans .pro
 #include <QSerialPortInfo>
 #include "global.h"
-#include "/home/pi/devQt/biblis/crs232c.h"
+#include "../biblis/crs232c.h"
 
 class CPeriphRs232: public QObject
 {

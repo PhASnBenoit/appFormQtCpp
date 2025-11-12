@@ -5,7 +5,7 @@
 #include <QDebug>
 #include "qdebug.h"
 
-#include "/home/pi/devQt/biblis/cgpio2024.h"
+#include "../biblis/cgpio2024.h"
 
 
 class CLed : public QObject

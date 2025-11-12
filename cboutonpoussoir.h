@@ -3,7 +3,7 @@
 
 #include <QDebug>
 #include <QThread>
-#include "/home/pi/devQt/biblis/cgpio2024.h"
+#include "../biblis/cgpio2024.h"
 
 class CBoutonPoussoir : public QObject
 {

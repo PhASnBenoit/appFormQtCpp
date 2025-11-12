@@ -3,7 +3,7 @@
 
 #include <QThread>
 #include "csharedmemory.h"
-#include "/home/pi/devQt/biblis/cspi.h"
+#include "../biblis/cspi.h"
 #include "global.h"
 
 #define ADRESSE 0x80

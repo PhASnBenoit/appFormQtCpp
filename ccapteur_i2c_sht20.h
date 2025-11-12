@@ -4,7 +4,7 @@
 #include <QThread>
 #include "global.h"
 #include "csharedmemory.h"
-#include "/home/pi/devQt/biblis/ci2c.h"
+#include "../biblis/ci2c.h"
 
 #define ADR 0x40 // 0x40 + bit LSB à 0 pour write
 #define COM_MES_TEMP 0xf3
