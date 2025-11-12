@@ -161,7 +161,7 @@ public:
         gbCapteurs->setGeometry(QRect(10, 30, 361, 181));
         layoutWidget = new QWidget(gbCapteurs);
         layoutWidget->setObjectName("layoutWidget");
-        layoutWidget->setGeometry(QRect(150, 30, 161, 66));
+        layoutWidget->setGeometry(QRect(150, 30, 161, 68));
         vlI2c = new QVBoxLayout(layoutWidget);
         vlI2c->setSpacing(6);
         vlI2c->setContentsMargins(11, 11, 11, 11);
@@ -181,7 +181,7 @@ public:
 
         layoutWidget1 = new QWidget(gbCapteurs);
         layoutWidget1->setObjectName("layoutWidget1");
-        layoutWidget1->setGeometry(QRect(150, 100, 161, 66));
+        layoutWidget1->setGeometry(QRect(150, 100, 161, 68));
         vlValSeuils = new QVBoxLayout(layoutWidget1);
         vlValSeuils->setSpacing(6);
         vlValSeuils->setContentsMargins(11, 11, 11, 11);
@@ -207,13 +207,13 @@ public:
         vlSeuils->setContentsMargins(0, 0, 0, 0);
         label_24 = new QLabel(layoutWidget2);
         label_24->setObjectName("label_24");
-        label_24->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_24->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlSeuils->addWidget(label_24);
 
         label_25 = new QLabel(layoutWidget2);
         label_25->setObjectName("label_25");
-        label_25->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_25->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlSeuils->addWidget(label_25);
 
@@ -227,13 +227,13 @@ public:
         vlLI2c->setContentsMargins(0, 0, 0, 0);
         label = new QLabel(verticalLayoutWidget_8);
         label->setObjectName("label");
-        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLI2c->addWidget(label);
 
         label_2 = new QLabel(verticalLayoutWidget_8);
         label_2->setObjectName("label_2");
-        label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_2->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLI2c->addWidget(label_2);
 
@@ -304,7 +304,7 @@ public:
         gbCapteurSpi->setGeometry(QRect(10, 220, 361, 111));
         verticalLayoutWidget = new QWidget(gbCapteurSpi);
         verticalLayoutWidget->setObjectName("verticalLayoutWidget");
-        verticalLayoutWidget->setGeometry(QRect(150, 30, 161, 66));
+        verticalLayoutWidget->setGeometry(QRect(150, 30, 161, 68));
         vlSpi = new QVBoxLayout(verticalLayoutWidget);
         vlSpi->setSpacing(6);
         vlSpi->setContentsMargins(11, 11, 11, 11);
@@ -337,13 +337,13 @@ public:
         vlLSpi->setContentsMargins(0, 0, 0, 0);
         label_26 = new QLabel(verticalLayoutWidget_10);
         label_26->setObjectName("label_26");
-        label_26->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_26->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLSpi->addWidget(label_26);
 
         label_27 = new QLabel(verticalLayoutWidget_10);
         label_27->setObjectName("label_27");
-        label_27->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_27->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLSpi->addWidget(label_27);
 
@@ -371,7 +371,7 @@ public:
         lEtatBouton = new QLabel(gbBouton);
         lEtatBouton->setObjectName("lEtatBouton");
         lEtatBouton->setGeometry(QRect(20, 40, 261, 31));
-        lEtatBouton->setAlignment(Qt::AlignCenter);
+        lEtatBouton->setAlignment(Qt::AlignmentFlag::AlignCenter);
         gbLcd = new QGroupBox(centralWidget);
         gbLcd->setObjectName("gbLcd");
         gbLcd->setGeometry(QRect(10, 340, 151, 121));
@@ -396,7 +396,7 @@ public:
         CGui->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(CGui);
         menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 1040, 19));
+        menuBar->setGeometry(QRect(0, 0, 1040, 27));
         CGui->setMenuBar(menuBar);
         mainToolBar = new QToolBar(CGui);
         mainToolBar->setObjectName("mainToolBar");
@@ -414,7 +414,7 @@ public:
         gbIntervalle->setGeometry(QRect(10, 0, 301, 191));
         layoutWidget3 = new QWidget(gbIntervalle);
         layoutWidget3->setObjectName("layoutWidget3");
-        layoutWidget3->setGeometry(QRect(190, 30, 71, 136));
+        layoutWidget3->setGeometry(QRect(190, 30, 71, 140));
         vlInter = new QVBoxLayout(layoutWidget3);
         vlInter->setSpacing(6);
         vlInter->setContentsMargins(11, 11, 11, 11);
@@ -450,25 +450,25 @@ public:
         vlLInter->setContentsMargins(0, 0, 0, 0);
         label_3 = new QLabel(verticalLayoutWidget_5);
         label_3->setObjectName("label_3");
-        label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_3->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLInter->addWidget(label_3);
 
         label_4 = new QLabel(verticalLayoutWidget_5);
         label_4->setObjectName("label_4");
-        label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_4->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLInter->addWidget(label_4);
 
         label_5 = new QLabel(verticalLayoutWidget_5);
         label_5->setObjectName("label_5");
-        label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_5->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLInter->addWidget(label_5);
 
         label_6 = new QLabel(verticalLayoutWidget_5);
         label_6->setObjectName("label_6");
-        label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_6->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLInter->addWidget(label_6);
 
@@ -513,31 +513,31 @@ public:
         vlLVS->setContentsMargins(0, 0, 0, 0);
         label_19 = new QLabel(verticalLayoutWidget_2);
         label_19->setObjectName("label_19");
-        label_19->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_19->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLVS->addWidget(label_19);
 
         label_20 = new QLabel(verticalLayoutWidget_2);
         label_20->setObjectName("label_20");
-        label_20->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_20->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLVS->addWidget(label_20);
 
         label_21 = new QLabel(verticalLayoutWidget_2);
         label_21->setObjectName("label_21");
-        label_21->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_21->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLVS->addWidget(label_21);
 
         label_22 = new QLabel(verticalLayoutWidget_2);
         label_22->setObjectName("label_22");
-        label_22->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_22->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLVS->addWidget(label_22);
 
         label_23 = new QLabel(verticalLayoutWidget_2);
         label_23->setObjectName("label_23");
-        label_23->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_23->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLVS->addWidget(label_23);
 
@@ -597,7 +597,7 @@ public:
         gbServeur->setGeometry(QRect(10, 430, 301, 111));
         layoutWidget4 = new QWidget(gbServeur);
         layoutWidget4->setObjectName("layoutWidget4");
-        layoutWidget4->setGeometry(QRect(140, 30, 151, 66));
+        layoutWidget4->setGeometry(QRect(140, 30, 151, 68));
         vlServer = new QVBoxLayout(layoutWidget4);
         vlServer->setSpacing(6);
         vlServer->setContentsMargins(11, 11, 11, 11);
@@ -623,13 +623,13 @@ public:
         vlLServeur->setContentsMargins(0, 0, 0, 0);
         label_13 = new QLabel(verticalLayoutWidget_4);
         label_13->setObjectName("label_13");
-        label_13->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_13->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLServeur->addWidget(label_13);
 
         label_14 = new QLabel(verticalLayoutWidget_4);
         label_14->setObjectName("label_14");
-        label_14->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_14->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLServeur->addWidget(label_14);
 
@@ -638,7 +638,7 @@ public:
         gbSgbd->setGeometry(QRect(10, 550, 301, 181));
         layoutWidget5 = new QWidget(gbSgbd);
         layoutWidget5->setObjectName("layoutWidget5");
-        layoutWidget5->setGeometry(QRect(150, 30, 141, 136));
+        layoutWidget5->setGeometry(QRect(150, 30, 141, 140));
         vlSgbd = new QVBoxLayout(layoutWidget5);
         vlSgbd->setSpacing(6);
         vlSgbd->setContentsMargins(11, 11, 11, 11);
@@ -661,7 +661,7 @@ public:
 
         lePassSgbd = new QLineEdit(layoutWidget5);
         lePassSgbd->setObjectName("lePassSgbd");
-        lePassSgbd->setEchoMode(QLineEdit::Password);
+        lePassSgbd->setEchoMode(QLineEdit::EchoMode::Password);
 
         vlSgbd->addWidget(lePassSgbd);
 
@@ -675,25 +675,25 @@ public:
         vlLSgbd->setContentsMargins(0, 0, 0, 0);
         label_15 = new QLabel(verticalLayoutWidget_7);
         label_15->setObjectName("label_15");
-        label_15->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_15->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLSgbd->addWidget(label_15);
 
         label_16 = new QLabel(verticalLayoutWidget_7);
         label_16->setObjectName("label_16");
-        label_16->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_16->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLSgbd->addWidget(label_16);
 
         label_17 = new QLabel(verticalLayoutWidget_7);
         label_17->setObjectName("label_17");
-        label_17->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_17->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLSgbd->addWidget(label_17);
 
         label_18 = new QLabel(verticalLayoutWidget_7);
         label_18->setObjectName("label_18");
-        label_18->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_18->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
 
         vlLSgbd->addWidget(label_18);
 
@@ -708,7 +708,7 @@ public:
 
     void retranslateUi(QMainWindow *CGui)
     {
-        CGui->setWindowTitle(QCoreApplication::translate("CGui", "Formation Qt C++ (PhA-2017 v1.1)", nullptr));
+        CGui->setWindowTitle(QCoreApplication::translate("CGui", "Formation Qt C++ (PhA-2024 v2.0)", nullptr));
         gbCapteurs->setTitle(QCoreApplication::translate("CGui", "Capteurs I2C", nullptr));
         leSeuilTempI2c->setText(QCoreApplication::translate("CGui", "37", nullptr));
         leSeuilHumI2c->setText(QCoreApplication::translate("CGui", "20", nullptr));
